@@ -1,0 +1,27 @@
+{
+  "name": "DIVEIN",
+  "description": "Extension for Tab hierarchy definition and marking",
+  "version": "1.0",
+  "manifest_version": 2,
+
+  "permissions": [
+    "tabs"
+  ],
+
+  "background": {
+    "scripts" : ["background.js"]
+  },
+
+
+  "sidebar_action": {
+    "default_page": "sidebar.html",
+
+    "default_icon": {
+      "16": "icons/icon.png"
+    },
+
+    "default_title": "DIVEIN",
+    "use_navigation_bar": false
+
+  }
+}
