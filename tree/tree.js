@@ -5,6 +5,12 @@ class Node {
     this.link = data;  // link/tab information of the node
     this.title = null; // name of the tab/node
     this.parent = null;
+
+    /*
+     * what I also could do is implement the child in actual list(array)form
+     * instead of doing it the linked list way
+     * might be easier to implement - consider as factor (look into JS array methods)
+     */
     this.child = null;
     this.rightSibling = null;
     this.leftSibling = null;

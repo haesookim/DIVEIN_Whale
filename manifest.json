@@ -1,5 +1,5 @@
 {
-  "name": "DIVEIN",
+  "name": "DIVE IN",
   "description": "Extension for Tab hierarchy definition and marking",
   "version": "1.0",
   "manifest_version": 2,
@@ -22,8 +22,7 @@
       "16": "icons/icon.png"
     },
 
-    "default_title": "DIVEIN",
+    "default_title": "DIVE IN",
     "use_navigation_bar": false
-
   }
 }
