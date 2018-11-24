@@ -2,6 +2,8 @@
   "name": "DIVE IN",
   "description": "Extension for Tab hierarchy definition and marking",
   "version": "1.0",
+  "icons": {
+    "128": "icons/icon_128.png"},
   "manifest_version": 2,
 
   "permissions": [
@@ -19,7 +21,7 @@
     "default_page": "sidebar/sidebar.html",
 
     "default_icon": {
-      "16": "icons/icon.png"
+      "16": "icons/icon_16.png"
     },
 
     "default_title": "DIVE IN",
