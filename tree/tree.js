@@ -11,10 +11,15 @@ class Node {
      * instead of doing it the linked list way
      * might be easier to implement - consider as factor (look into JS array methods)
      */
-    this.child = null;
-    this.rightSibling = null;
-    this.leftSibling = null;
-    //do I need isParent & isLeaf booleans?
+    this.children = [];
+  }
+
+  //do I need isParent & isLeaf booleans?
+  //is this correct JS syntax
+  booleans isParent(){
+    if (this.children.length == 0){
+      return true;
+    }
   }
 }
 
@@ -37,36 +42,33 @@ class tree{
 
   //set parent - child relationship
   setParent(parentNode, childNode){
-
-  }
-
-  // these two functions may be merged
-  // set oldchild as rightSibling of newchild
-  setRightSibling(oldChild, newChild){
-
-  }
-
-  // set newchild as leftsibling of oldChild
-  setLeftSibling(oldChild, newChild){
-
+    parentNode.children.push(childNode);
+    childNode.parent = parentNode;
   }
 
   //insert node to the tree accordingly
   insertNode(newNode){
+
     //setparent, setchild
   }
 
   // run when tab(node) is closed
-  // implement recursively?
+  // check if this is correct!!!
   deleteNode(closedNode){
     //if parent, only delete text data(link) of the node
-
+    if (closedNode.children.length != 0){ /*is parent*/
+      closedNode.data = null;
+      closedNode.title = "";
+    }
     //if leaf, delete node
-  }
-
-  // find last child of a single parent
-  // so that sibling could be added
-  findLastChild(parentNode){
-
+    else {
+      for (var i = 0; i < closedNode.parent.children.length; i++){
+        if (closedNode.parent.children[i] == closedNode){
+          break;
+        }
+      }
+      closedNode.parent.children.splice(i, 1);
+      closedNode.parent = null;
+    }
   }
 }
