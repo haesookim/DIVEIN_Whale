@@ -8,11 +8,11 @@ class Node {
 
     /*
      * what I also could do is implement the child in actual list(array)form
-//      * instead of doing it the linked list way
-//      * might be easier to implement - consider as factor (look into JS array methods)
-//      */
-//     this.children = [];
-//   }
+      * instead of doing it the linked list way
+      * might be easier to implement - consider as factor (look into JS array methods)
+      */
+    //this.children = [];
+  }
 
   //do I need isParent & isLeaf booleans?
   //is this correct JS syntax
