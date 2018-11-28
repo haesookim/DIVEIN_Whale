@@ -18,8 +18,9 @@ class Node {
   //is this correct JS syntax
   booleans isParent(){
     if (this.children.length == 0){
-      return true;
+      return false;
     }
+    else return true;
   }
 }
 
