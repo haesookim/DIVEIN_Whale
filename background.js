@@ -1,14 +1,7 @@
-
-
-// whale.tabs.onCreated.addListener(() => {
-//   obj.push(test);
-// });
-
-// function tabConvert() {
-//   var randomInfo = {};
-//   randomInfo.id = 6;
-//   randomInfo.parent_id = 3;
-//   randomInfo.title = "made this";
-//   return randomInfo;
-// };
-
+whale.runtime.onConnect.addListener(port => {
+  if(port.name === 'dive_in') {
+    whale.tabs.onCreated.addListener(function(tab) {
+      port.postMessage(tab);
+    });
+  }
+})

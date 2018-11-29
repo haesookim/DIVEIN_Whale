@@ -1,49 +1,78 @@
-var obj = [
-    {id: 2, parent_id: 1, title: "Row 2"},
-    {id: 3, parent_id: 2, title: "Row 3"},
-    {id: 4, parent_id: 2, title: "Row 4"},
-    {id: 1, parent_id: null, title: "Row 1"}
-  ]
-  
-  var test = {};
-  test.id = 5;
-  test.parent_id = 1;
-  test.title = "Row 5";
+const port = whale.runtime.connect({name: 'dive_in'});
 
-  obj.sort(function(a, b){
-    return (a.parent_id == null ? 0 : a.parent_id) - (b.parent_id == null ? 0 : b.parent_id);
-  });
-  
-  var tree = document.getElementById("tree");
-  for (var i = 0; i < obj.length; ++i)
+port.onMessage.addListener(message => {
+  updateTabList();
+})
+
+
+updateTabList();
+
+function updateTabList() {
+  whale.tabs.query({currentWindow: true}, function(tabs){
+    var elTabList = document.getElementById('tree');
+    elTabList.innerHTML = "";
+
+    for (var i = 0; i < tabs.length; ++i)
     {
+      console.log(tabs[i]);
   
-      if (obj[i].parent_id == null)
+      if (tabs[i].hasOwnProperty('openerTabId') )
         {
-          createTreeElement("li", obj[i].id, obj[i].title, tree);
-        }
-      else
-        {
-           var treeChildNode = document.getElementById("t" + obj[i].parent_id).getElementsByTagName("ul");
+          var treeChildNode = document.getElementById("t" + tabs[i].openerTabId).getElementsByTagName("ul");
           if (treeChildNode.length)
             {
-              createTreeElement("li", obj[i].id, obj[i].title, treeChildNode[0]);
+              createTreeElement("li", tabs[i].id, tabs[i].title, treeChildNode[0], tabs[i].favIconUrl);
             }
           else
             {
-              createTreeElement("ul", obj[i].parentId, "", document.getElementById("t" + obj[i].parent_id));
-              createTreeElement("li", obj[i].id, obj[i].title, document.getElementById("t" + obj[i].parent_id).getElementsByTagName("ul")[0]);
+              createTreeElement("ul", tabs[i].openerTabId, "", document.getElementById("t" + tabs[i].openerTabId), "");
+              createTreeElement("li", tabs[i].id, tabs[i].title, document.getElementById("t" + tabs[i].openerTabId).getElementsByTagName("ul")[0], tabs[i].favIconUrl);
             }
+        }
+      else
+        {
+          createTreeElement("li", tabs[i].id, tabs[i].title, elTabList, tabs[i].favIconUrl);
         }
     }
   
-  function createTreeElement(name, id, text, parent) {
-    var node = document.createElement(name);
-    node.id = "t" + id;
-    node.innerHTML = text;
-    parent.appendChild(node);
-  }
+
+
+  })
+}
+
+function createTreeElement(name, id, title, parent, favIconUrl) {
+  var node = document.createElement(name);
+  node.id = "t" + id;
+  node.innerHTML = formatTabTitle(title);
+
+  node.addEventListener('click', () => {
+    activateTab(id);
+  });
   
+  var favIcon = document.createElement("img");
+  // favIcon size
+  // favIcon loading error?
+  favIcon.src = favIconUrl;
+  node.appendChild(favIcon);
+
+  parent.appendChild(node);
+}
+
+function activateTab(id) {
+  whale.tabs.update(id, {"active": true});
+}
+
+function formatTabTitle(title) {
+  if(title.length > 50) {
+    title = title.substring(0, 47) + "...";
+  }
+  return title;
+}
+
+
+  
+
+
   
   // 클릭했을 때 그 탭으로 fcous 옮겨지도록
   // 탭마다 status(default, checked, pinned 부여)
