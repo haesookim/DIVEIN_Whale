@@ -6,22 +6,23 @@ constructor(data) {
   this.title = null; // name of the tab/node
   this.parent = null;
 
-  /*
-    * what I also could do is implement the child in actual list(array)form
-     * instead of doing it the linked list way
-     * might be easier to implement - consider as factor (look into JS array methods)
-     */
-  this.children = [];
+    /*
+     * what I also could do is implement the child in actual list(array)form
+      * instead of doing it the linked list way
+      * might be easier to implement - consider as factor (look into JS array methods)
+      */
+    //this.children = [];
   }
 
-//   //do I need isParent & isLeaf booleans?
-//   //is this correct JS syntax
-   booleans isParent(){
-   if (this.children.length == 0){
-    return true;
-   }
+  //do I need isParent & isLeaf booleans?
+  //is this correct JS syntax
+  booleans isParent(){
+    if (this.children.length == 0){
+      return false;
+    }
+    else return true;
   }
- }
+}
 
 // tree class
 class tree{
