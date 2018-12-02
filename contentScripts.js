@@ -82,6 +82,7 @@ function formatTabTitle(title) {
     updateTabList();
   });
   whale.tabs.onCreated.addListener(updateTabList);
+  whale.tabs.onUpdated.addListener(updateTabList);
   whale.tabs.onAttached.addListener(updateTabList);
   whale.tabs.onDetached.addListener(updateTabList);
   whale.tabs.onRemoved.addListener(updateTabList);
