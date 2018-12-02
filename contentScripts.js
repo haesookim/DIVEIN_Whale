@@ -69,17 +69,21 @@ function formatTabTitle(title) {
   return title;
 }
 
-
-  
-
-
-  
-  // 클릭했을 때 그 탭으로 fcous 옮겨지도록
+    // 클릭했을 때 그 탭으로 focus 옮겨지도록 ✓
   // 탭마다 status(default, checked, pinned 부여)
-  // 파비콘 삽입
+  // 파비콘 삽입 ✓
   // sidebar 오른쪽에다 status 표시하는 아이콘 넣고
   // 이 아이콘 클릭했을 때 status 변하도록
   // status 별로 배경색깔 다르게
   
+
   //싱크
-  //
+  document.addEventListener('DOMContentLoaded', function() {
+    updateTabList();
+  });
+  whale.tabs.onCreated.addListener(updateTabList);
+  whale.tabs.onAttached.addListener(updateTabList);
+  whale.tabs.onDetached.addListener(updateTabList);
+  whale.tabs.onRemoved.addListener(updateTabList);
+  // attached, detached 되었을 때 비활된 창의 sidebar에도 활성화된 창의 탭 트리가 떠버림
+  // tab query currentWindow 손대야 할 듯
