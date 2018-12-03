@@ -9,8 +9,8 @@ updateTabList();
 
 function updateTabList() {
   whale.tabs.query({currentWindow: true}, function(tabs){
-    var elTabList = document.getElementById('tree');
-    elTabList.innerHTML = "";
+    var tabTree = document.getElementById('tree');
+    tabTree.innerHTML = "";
 
     for (var i = 0; i < tabs.length; ++i)
     {
@@ -31,7 +31,7 @@ function updateTabList() {
         }
       else
         {
-          createTreeElement("li", tabs[i].id, tabs[i].title, elTabList, tabs[i].favIconUrl);
+          createTreeElement("li", tabs[i].id, tabs[i].title, tabTree, tabs[i].favIconUrl);
         }
     }
   
@@ -43,7 +43,6 @@ function updateTabList() {
 function createTreeElement(name, id, title, parent, favIconUrl) {
   var node = document.createElement(name);
   node.id = "t" + id;
-  node.innerHTML = formatTabTitle(title);
 
   node.addEventListener('click', () => {
     activateTab(id);
@@ -53,7 +52,9 @@ function createTreeElement(name, id, title, parent, favIconUrl) {
   // favIcon size
   // favIcon loading error?
   favIcon.src = favIconUrl;
+
   node.appendChild(favIcon);
+  node.innerHTML += formatTabTitle(title);
 
   parent.appendChild(node);
 }
@@ -63,8 +64,8 @@ function activateTab(id) {
 }
 
 function formatTabTitle(title) {
-  if(title.length > 50) {
-    title = title.substring(0, 47) + "...";
+  if(title.length > 30) {
+    title = title.substring(0, 27) + "...";
   }
   return title;
 }
