@@ -75,8 +75,8 @@ function activateTab(id) {
 }
 
 function formatTabTitle(title) {
-  if(title.length > 50) {
-    title = title.substring(0, 47) + "...";
+  if(title.length > 35) {
+    title = title.substring(0, 32) + "...";
   }
   return title;
 }
