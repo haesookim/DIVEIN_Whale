@@ -5,8 +5,14 @@ ul {
 ul li {
     margin: 10 0 10 0;
 }
-#tree img {
+#tree img:nth-child(1) {
     width: 16px;
     height: 16px;
     margin-right: 10px;
+}
+
+#tree img:nth-child(2) { 
+    float: right;
+    width: 16px;
+    height: 16px;
 }

@@ -5,8 +5,6 @@ port.onMessage.addListener(message => {
 })
 
 
-updateTabList();
-
 function updateTabList() {
   whale.tabs.query({currentWindow: true}, function(tabs){
     var tabTree = document.getElementById('tree');
@@ -33,10 +31,19 @@ function updateTabList() {
         {
           createTreeElement("li", tabs[i].id, tabs[i].title, tabTree, tabs[i].favIconUrl);
         }
+
+        // make pinned tabs' background color as green
+        if (tabs[i].pinned) {
+          var pinnedNode = document.getElementById("t" + tabs[i].id);
+          pinnedNode.style.background = "#68E2BB46";
+          pinnedNode.children[1].src = getIconPath(tabs[i].pinned)
+        }
+
+        // make the active tab's title bold 
+        if (tabs[i].active) {
+          document.getElementById("t" + tabs[i].id).style.fontWeight = "bold";
+        }
     }
-  
-
-
   })
 }
 
@@ -49,12 +56,16 @@ function createTreeElement(name, id, title, parent, favIconUrl) {
   });
   
   var favIcon = document.createElement("img");
-  // favIcon size
+  // favIcon size 
   // favIcon loading error?
   favIcon.src = favIconUrl;
 
   node.appendChild(favIcon);
   node.innerHTML += formatTabTitle(title);
+  
+  var status = document.createElement("img");
+  status.src = "../icons/default.svg";
+  node.appendChild(status);
 
   parent.appendChild(node);
 }
@@ -64,10 +75,14 @@ function activateTab(id) {
 }
 
 function formatTabTitle(title) {
-  if(title.length > 30) {
-    title = title.substring(0, 27) + "...";
+  if(title.length > 50) {
+    title = title.substring(0, 47) + "...";
   }
   return title;
+}
+
+function getIconPath(isPinned) {
+  return "../icons/" + (isPinned ? "pin" : "default") + ".svg";
 }
 
     // 클릭했을 때 그 탭으로 focus 옮겨지도록 ✓
@@ -79,13 +94,14 @@ function formatTabTitle(title) {
   
 
   //싱크
-  document.addEventListener('DOMContentLoaded', function() {
-    updateTabList();
-  });
-  whale.tabs.onCreated.addListener(updateTabList);
-  whale.tabs.onUpdated.addListener(updateTabList);
-  whale.tabs.onAttached.addListener(updateTabList);
-  whale.tabs.onDetached.addListener(updateTabList);
-  whale.tabs.onRemoved.addListener(updateTabList);
+document.addEventListener('DOMContentLoaded', function() {
+  updateTabList();
+});
+whale.tabs.onCreated.addListener(updateTabList);
+whale.tabs.onUpdated.addListener(updateTabList);
+whale.tabs.onAttached.addListener(updateTabList);
+whale.tabs.onDetached.addListener(updateTabList);
+whale.tabs.onRemoved.addListener(updateTabList);
+whale.tabs.onActivated.addListener(updateTabList); // to make the title bold
   // attached, detached 되었을 때 비활된 창의 sidebar에도 활성화된 창의 탭 트리가 떠버림
   // tab query currentWindow 손대야 할 듯
