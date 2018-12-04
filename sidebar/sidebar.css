@@ -5,14 +5,22 @@ ul {
 ul li {
     margin: 10 0 10 0;
 }
+
+ul li a {
+    cursor: pointer;
+}
+
+/* favicon */
 #tree img:nth-child(1) {
     width: 16px;
     height: 16px;
     margin-right: 10px;
 }
 
-#tree img:nth-child(2) { 
+/* status button */
+#tree img:nth-child(3) { 
     float: right;
     width: 16px;
     height: 16px;
+    cursor: pointer;
 }

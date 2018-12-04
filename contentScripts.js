@@ -35,8 +35,8 @@ function updateTabList() {
         // make pinned tabs' background color as green
         if (tabs[i].pinned) {
           var pinnedNode = document.getElementById("t" + tabs[i].id);
-          pinnedNode.style.background = "#68E2BB46";
-          pinnedNode.children[1].src = getIconPath(tabs[i].pinned)
+          pinnedNode.children[1].style.background = "#68E2BB46";
+          pinnedNode.children[2].src = getIconPath(tabs[i].pinned)
         }
 
         // make the active tab's title bold 
@@ -50,23 +50,31 @@ function updateTabList() {
 function createTreeElement(name, id, title, parent, favIconUrl) {
   var node = document.createElement(name);
   node.id = "t" + id;
+  node.innerHTML = "";
 
-  node.addEventListener('click', () => {
+  // set favicon
+  var favIcon = document.createElement("img");
+  favIcon.src = favIconUrl;
+
+  // set title in a tag
+  var titleA = document.createElement("a");
+  var titleAText = document.createTextNode(formatTabTitle(title));
+  titleA.appendChild(titleAText);
+  // make title clickable to move focus
+  titleA.addEventListener('click', () => {
     activateTab(id);
   });
   
-  var favIcon = document.createElement("img");
-  // favIcon size 
-  // favIcon loading error?
-  favIcon.src = favIconUrl;
-
-  node.appendChild(favIcon);
-  node.innerHTML += formatTabTitle(title);
-  
+  // set status icon
   var status = document.createElement("img");
   status.src = "../icons/default.svg";
-  node.appendChild(status);
+  status.addEventListener('click', () => {
+    changeStatus(id);
+  });
 
+  node.appendChild(favIcon);
+  node.appendChild(titleA);
+  node.appendChild(status);
   parent.appendChild(node);
 }
 
@@ -81,11 +89,18 @@ function formatTabTitle(title) {
   return title;
 }
 
+// 나중엔 토글(on/off)가 아니라 세 가지 staus가 되어야겠지만..!
+function changeStatus(id) {
+  whale.tabs.get(id, function(tab){
+    whale.tabs.update(id, {'pinned': !tab.pinned})
+  });
+}
+
 function getIconPath(isPinned) {
   return "../icons/" + (isPinned ? "pin" : "default") + ".svg";
 }
 
-    // 클릭했을 때 그 탭으로 focus 옮겨지도록 ✓
+  // 클릭했을 때 그 탭으로 focus 옮겨지도록 ✓
   // 탭마다 status(default, checked, pinned 부여)
   // 파비콘 삽입 ✓
   // sidebar 오른쪽에다 status 표시하는 아이콘 넣고
