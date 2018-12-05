@@ -1,13 +1,39 @@
-Node class
+// Node class
 // all open tabs are defined as nodes
 class Node {
-constructor(id, link, title, favicon) {
-  this.id = id; // tab id of the node
-  this.link = link;  // link information of the node
-  this.title = title; // name of the tab/node
-  this.favicon = favicon;
-  this.parent = null;
-  this.children = [];
+  constructor(id, link, title, favicon) {
+    this.id = id; // tab id of the node
+    this.link = link;  // link information of the node
+    this.title = title; // name of the tab/node
+    this.favicon = favicon; //if loaded favicon exists, load it in (should create defualts setting in css)
+    this.parent = null;
+    this.children = [];
+    this.active = false;
+    this.checked = false;
+    this.pinned = false;
+  }
+
+  setActive(){
+    this.active = true;
+  }
+
+  setInactive(){
+    this.active = false;
+  }
+
+  setChecked(){
+    this.checked = true;
+    this.pinned = false;
+  }
+
+  setPinned(){
+    this.checked = false;
+    this.pinned = true;
+  }
+
+  setDefault(){
+    this.checked = false;
+    this.pinned = false;
   }
 }
 
@@ -17,21 +43,21 @@ class tree{
     this.root = null;
   }
 
-  //run when new tab(child node) is opened with the variable data (link)
-  addChild(data){
-    var newNode = new Node(data);
+  //add a new node to the tree
+  createNode(id, link, title, favicon){
 
-    if (this.root == null){
-      this.root = newNode;
-    } else {
-      this.insertNode(newNode);
-    }
   }
 
   //set parent - child relationship
+  // called by
   setParent(parentNode, childNode){
     parentNode.children.push(childNode);
     childNode.parent = parentNode;
+  }
+
+  // search for a specific node according to the tabid
+  findNode(tabid){
+
   }
 
   //insert node to the tree accordingly
