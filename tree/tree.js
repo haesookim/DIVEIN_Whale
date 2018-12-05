@@ -1,26 +1,13 @@
 Node class
 // all open tabs are defined as nodes
 class Node {
-constructor(data) {
-  this.link = data;  // link/tab information of the node
-  this.title = null; // name of the tab/node
+constructor(id, link, title, favicon) {
+  this.id = id; // tab id of the node
+  this.link = link;  // link information of the node
+  this.title = title; // name of the tab/node
+  this.favicon = favicon;
   this.parent = null;
-
-    /*
-     * what I also could do is implement the child in actual list(array)form
-      * instead of doing it the linked list way
-      * might be easier to implement - consider as factor (look into JS array methods)
-      */
-    //this.children = [];
-  }
-
-  //do I need isParent & isLeaf booleans?
-  //is this correct JS syntax
-  booleans isParent(){
-    if (this.children.length == 0){
-      return false;
-    }
-    else return true;
+  this.children = [];
   }
 }
 
