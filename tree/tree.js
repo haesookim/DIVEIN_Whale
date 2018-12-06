@@ -39,13 +39,18 @@ class Node {
 
 // tree class
 class tree{
-  constructor(){
-    this.root = null;
+  constructor(def){
+    this.root = def;
+    this.treeArray = [];
   }
 
   //add a new node to the tree
-  createNode(id, link, title, favicon){
-
+  createNode(tab){
+    var newNode = new Node(tab.id, tab.url, tab.title, tab.favIconUrl);
+    this.treeArray.push(newNode);
+    if(tab.openerTabId !== null){
+      this.setParent(this.findNode(tab.openerTabId), newNode);
+    }
   }
 
   //set parent - child relationship
@@ -56,23 +61,41 @@ class tree{
   }
 
   // search for a specific node according to the tabid
-  findNode(tabid){
-
+  findNode(tabId){
+    for(var i; i<treeArray.length; ++i){
+      if(treeArray[i].openerTabId === tabId){
+        return treeArray[i];
+      }
+    }
   }
+
+  updateNode(tabId, changeInfo){
+    var updatedNode = this.findNode(tabId);
+    updatedNode.link = changeInfo.url;
+    updatedNode.title = changeInfo.title;
+    updatedNode.favicon = changeInfo.favIconUrl;
+    
+    var index = treeArray.indexOf(this.findNode(tabId));
+    this.findNode(tabId) = updatedNode;
+    if (index !== -1) {
+        this.treeArray[index] = updatedNode;
+      }
+    }
 
   //insert node to the tree accordingly
-  insertNode(newNode){
+  // insertNode(newNode){
 
-    //setparent, setchild
-  }
+  //   //setparent, setchild
+  // }
 
   // run when tab(node) is closed
   // check if this is correct!!!
   deleteNode(closedNode){
     //if parent, only delete text data(link) of the node
     if (closedNode.children.length != 0){ /*is parent*/
-      closedNode.data = null;
+      closedNode.link = null;
       closedNode.title = "";
+      closedNode.favicon = null; //if loaded favicon exists, load it in (should create defualts setting in css)
     }
     //if leaf, delete node
     else {
@@ -80,9 +103,26 @@ class tree{
         if (closedNode.parent.children[i] == closedNode){
           break;
         }
+        closedNode.parent.children.splice(i, 1);
+        closedNode.parent = null;
+        this.treeArray(i, 1);
       }
-      closedNode.parent.children.splice(i, 1);
-      closedNode.parent = null;
     }
   }
 }
+
+var defTab = whale.tabs.get(1);
+defNode = new Node(defTab.id, defTab.url, defTab.title, defTab.favIconUrl);
+const diveInTree = new tree(defNode);
+
+whale.tabs.onCreated.addListener((tab) => {
+  diveInTree.createNode(tab);
+})
+
+whale.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  diveInTree.updateNode(tabId, changeInfo);
+})
+
+whale.tabs.onRemoved.addListener((tab) => {
+  diveInTree.deleteNode(diveInTree.findNode(tab.id));
+})
