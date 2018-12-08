@@ -126,3 +126,10 @@ whale.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 whale.tabs.onRemoved.addListener((tab) => {
   diveInTree.deleteNode(diveInTree.findNode(tab.id));
 })
+
+
+whale.runtime.onConnect.addListener(port => {
+  if(port.name === 'dive_in'){
+    port.postMessage(diveInTree);
+  }
+})
