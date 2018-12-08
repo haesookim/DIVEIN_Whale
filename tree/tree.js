@@ -48,7 +48,7 @@ class tree{
   createNode(tab){
     var newNode = new Node(tab.id, tab.url, tab.title, tab.favIconUrl);
     this.treeArray.push(newNode);
-    if(tab.openerTabId !== null){
+    if(tab.openerTabId != null){
       this.setParent(this.findNode(tab.openerTabId), newNode);
     }
   }
