@@ -23,7 +23,7 @@ whale.runtime.onConnect.addListener(removePort => {
   if(removePort.name === 'remove'){
     whale.tabs.onRemoved.addListener((tabId) => {
       console.log('removed a new tab');
-
+      console.log(tabId);
       removePort.postMessage(tabId);
     })
   }

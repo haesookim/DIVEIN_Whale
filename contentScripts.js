@@ -110,14 +110,19 @@ class tree{
     }
     //if leaf, delete node
     else {
-      for (var i = 0; i < closedNode.parent.children.length; i++){
-        if (closedNode.parent.children[i] == closedNode){
-          closedNode.parent.children.splice(i, 1);
-          closedNode.parent = null;
-          console.log("turn " + i)
-          const idx = this.treeArray.indexOf(closedNode)
-          if (idx > -1) this.treeArray.splice(idx, 1)
+      if(closedNode.parent){
+        for (var i = 0; i < closedNode.parent.children.length; i++){
+          if (closedNode.parent.children[i] == closedNode){
+            closedNode.parent.children.splice(i, 1);
+            closedNode.parent = null;
+            console.log("turn " + i);
+            const idx = this.treeArray.indexOf(closedNode);
+            if (idx > -1) this.treeArray.splice(idx, 1);
+          }
         }
+      }else {
+        const idx = this.treeArray.indexOf(closedNode);
+        if (idx > -1) this.treeArray.splice(idx, 1);
       }
     }
   }
@@ -145,9 +150,11 @@ updatePort.onMessage.addListener((message) => {
 
 removePort.onMessage.addListener((tabId) => {
   console.log('removed a new tab');
+  console.log(tabId);
   diveInTree.deleteNode(diveInTree.findNode(tabId));
   drawHTML();
 })
+
 
 function drawHTML(){
   var parentNodes = diveInTree.treeArray.filter((Node) => {
