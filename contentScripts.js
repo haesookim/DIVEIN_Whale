@@ -134,9 +134,12 @@ createPort.onMessage.addListener((tab) => {
   drawHTML();
 })
 
-updatePort.onMessage.addListener((tabId, changeInfo) => {
+updatePort.onMessage.addListener((message) => {
   console.log('updated a new tab');
-  diveInTree.updateNode(tabId, changeInfo);
+  console.log(message.tabId);
+  console.log(message.changeInfo);
+  console.log(message.tab);
+  diveInTree.updateNode(message.tabId, message.changeInfo);
   drawHTML();
 })
 
@@ -152,6 +155,9 @@ function drawHTML(){
       return Node;
     }
   })
+  while(tabTree.hasChildNodes()){
+    tabTree.removeChild(tabTree.firstChild);
+  }
   parentNodes.forEach(confirm);
 }
 
