@@ -222,15 +222,19 @@ function draw(Node){
 //   document.getElementById("t" + tabs[i].id).style.fontWeight = "bold";
 // }
 
+
 function createTreeElement(id, title, favicon){
   var component = document.createElement("div");
+  component.className = "node";
 
   // set fold button
   var foldDiv = document.createElement("div");
+  foldDiv.className = "folder";
   component.appendChild(foldDiv);
 
   // set favicon
   var favIconDiv = document.createElement("div");
+  favIconDiv.className = "favicon";
   var favIconImage = document.createElement("img");
   favIconImage.src = favicon;
   favIconDiv.appendChild(favIconImage);
@@ -238,6 +242,7 @@ function createTreeElement(id, title, favicon){
 
   // set title in a tag;
   var titleDiv = document.createElement("div");
+  titleDiv.className = "title";
   var titleA = document.createElement("a");
   var titleAText = document.createTextNode(formatTabTitle(title));
   titleA.appendChild(titleAText);
@@ -250,6 +255,7 @@ function createTreeElement(id, title, favicon){
 
   // set status icon
   var statusDiv = document.createElement("div");
+  statusDiv.className = "status"
   var status = document.createElement("img");
   status.src = "../icons/default.svg";
   statusDiv.appendChild(status);

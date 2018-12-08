@@ -2,24 +2,36 @@ ul {
     padding-left: 20px;
     list-style: none;
 }
-ul li {
+.node {
     margin: 10 0 10 0;
 }
 
-ul li a {
-    cursor: pointer;
+.favicon {
+    display: inline-block;
 }
 
 /* favicon */
-#tree img:nth-child(1) {
+.favicon img {
     width: 16px;
     height: 16px;
     margin-right: 10px;
 }
 
-/* status button */
-#tree img:nth-child(3) { 
+.title {
+    display: inline-block;
+}
+
+.title a {
+    cursor: pointer;
+}
+
+.status {
+    display: inline-block;
     float: right;
+    margin-right: 10px;
+}
+/* status button */
+.status img { 
     width: 16px;
     height: 16px;
     cursor: pointer;
