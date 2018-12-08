@@ -160,9 +160,7 @@ removePort.onMessage.addListener((tabId) => {
 
 function drawHTML(){
   var parentNodes = diveInTree.treeArray.filter((Node) => {
-    if(Node.parent == null){
-      return Node;
-    }
+    return Node.parent == null;
   })
   while(tabTree.hasChildNodes()){
     tabTree.removeChild(tabTree.firstChild);
@@ -290,6 +288,19 @@ function changeStatus(id) {
 
 function getIconPath(isPinned) {
   return "../icons/" + (isPinned ? "pin" : "default") + ".svg";
+}
+
+// for super Delete
+function superDelete(){
+  var defaultNodes = diveInTree.treeArray.filter(node => {
+    return (node.checked == false && node.pinned == false);
+  })
+  console.log(defaultNodes);
+  for(var i = 0 ; i < defaultNodes.length ; i++){
+    diveInTree.deleteNode(defaultNodes[i]);
+  }
+  console.log(diveInTree);
+  drawHTML();
 }
 
 //   // 클릭했을 때 그 탭으로 focus 옮겨지도록 ✓
