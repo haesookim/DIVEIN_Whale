@@ -168,10 +168,12 @@ function drawHTML(){
   parentNodes.forEach(confirm);
 }
 
-var defNode = {}
+//create tree class 'diveInTree'
+var defNode = {};
 var diveInTree = new tree(defNode);
 
-console.log(diveInTree)
+console.log(diveInTree);
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log("----START----")
     whale.tabs.query({currentWindow: true}, function(tabs){
@@ -179,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(i)
         diveInTree.createNode(tabs[i]);
       }
+      drawHTML();
     })
   })
 
