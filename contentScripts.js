@@ -51,10 +51,12 @@ class tree{
     var newNode = new Node(tab.id, tab.url, tab.title, tab.favIconUrl);
     this.treeArray.push(newNode);
     // console.log(tab.openerTabId);
-    if(tab.openerTabId != null){
-      console.log('not null');
-      // console.log(this.findNode(tab.openerTabId));
-      this.setParent(this.findNode(tab.openerTabId), newNode);
+    if(tab.url != 'chrome://newtab/'){
+      if(tab.openerTabId != null){
+        console.log('not null');
+        // console.log(this.findNode(tab.openerTabId));
+        this.setParent(this.findNode(tab.openerTabId), newNode);
+      }
     }
   }
 
