@@ -48,10 +48,7 @@ class tree{
   createNode(tab){
     var newNode = new Node(tab.id, tab.url, tab.title, tab.favIconUrl);
     this.treeArray.push(newNode);
-    console.log(tab.openerTabId);
     if(tab.openerTabId != null){
-      console.log('not null');
-      console.log(this.findNode(tab.openerTabId));
       this.setParent(this.findNode(tab.openerTabId), newNode);    }
   }
 
@@ -75,9 +72,14 @@ class tree{
 
   updateNode(tabId, changeInfo){
     var updatedNode = this.findNode(tabId);
-    updatedNode.link = changeInfo.url;
-    updatedNode.title = changeInfo.title;
-    updatedNode.favicon = changeInfo.favIconUrl;
+    
+    if (changeInfo.url) {
+      updatedNode.link = changeInfo.url
+    } else if (changeInfo.title) {
+      updatedNode.title = changeInfo.title
+    } else if (changeInfo.favIconUrl) {
+      updatedNode.favicon = changeInfo.favIconUrl
+    }
     
     var index = this.treeArray.indexOf(this.findNode(tabId));
     this.findNode(tabId) = updatedNode;
@@ -115,27 +117,23 @@ class tree{
   }
 }
 
-console.log('background.js');
 
-var diveInTree;
-makeDefNode();
+var defNode = {}
+const diveInTree = new tree(defNode);
 
-function makeDefNode(){
-  whale.tabs.query({'index': 0}, function(tab){
-    var defTab = tab[0];
-    var defNode = new Node(defTab.id, defTab.url, defTab.title, defTab.favIconUrl);
-    diveInTree = new tree(defNode);
-    console.log(diveInTree);
+document.addEventListener('DOMContentLoaded', function() {
+// whale.sidebarAction.onClicked.addListener(function () {
+  whale.tabs.query({currentWindow: true}, function(tabs){
+    for (var i = 0; i < tabs.length; i++) {
+        diveInTree.createNode(tabs[i]);
+    }
   })
-}
+})
 
 whale.tabs.onCreated.addListener((tab) => {
-  console.log('created a new tab');
   diveInTree.createNode(tab);
   console.log(diveInTree);
-
-  // diveInTree.createNode(tab);
-  // whale.runtime.sendMessage('1');
+  whale.runtime.sendMessage(diveInTree);
 })
 
 whale.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
@@ -145,4 +143,5 @@ whale.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 whale.tabs.onRemoved.addListener((tab) => {
   diveInTree.deleteNode(diveInTree.findNode(tab.id));
 })
+
 

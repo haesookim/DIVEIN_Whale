@@ -8,9 +8,24 @@ whale.tabs.query({'currentWindow': true}, (tabs) => {
 });
 
 whale.runtime.onMessage.addListener((message) => {
-  console.log(message + '1');
-  console.log('1');
+  console.log(message);
 })
+
+//재귀
+function confirm(Node) {
+  for(var i = 0 ; i < Node.children.length; i++){
+    draw(Node.children[i]);
+    if(Node.children[i].hasProperty(children)){
+      confirm(children[i]);
+    }
+  }
+}
+
+function draw(Node){
+  var space = document.createElement("div");
+  var titleText = document.createTextNode(formatTabTitle(Node.title));
+  space.appendChild(titleText);
+}
 
 
 // function updateTabList() {
@@ -90,12 +105,12 @@ whale.runtime.onMessage.addListener((message) => {
 //   whale.tabs.update(id, {"active": true});
 // }
 
-// function formatTabTitle(title) {
-//   if(title.length > 35) {
-//     title = title.substring(0, 32) + "...";
-//   }
-//   return title;
-// }
+function formatTabTitle(title) {
+  if(title.length > 35) {
+    title = title.substring(0, 32) + "...";
+  }
+  return title;
+}
 
 // // 나중엔 토글(on/off)가 아니라 세 가지 staus가 되어야겠지만..!
 // function changeStatus(id) {
