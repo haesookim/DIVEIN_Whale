@@ -46,9 +46,11 @@ class tree{
 
   //add a new node to the tree
   createNode(tab){
+    console.log("-----------creating Node-------------"); 
     var newNode = new Node(tab.id, tab.url, tab.title, tab.favIconUrl);
     this.treeArray.push(newNode);
-    if(tab.openerTabId !== null){
+    if(tab.openerTabId != null){
+      // console.log("if statement! tab.openerTabId is " + tab.openerTabId)
       this.setParent(this.findNode(tab.openerTabId), newNode);
     }
   }
@@ -56,26 +58,37 @@ class tree{
   //set parent - child relationship
   // called by
   setParent(parentNode, childNode){
-    parentNode.children.push(childNode);
+    parentNode.children.push(childNode)
     childNode.parent = parentNode;
   }
 
   // search for a specific node according to the tabid
   findNode(tabId){
-    for(var i; i<treeArray.length; ++i){
-      if(treeArray[i].openerTabId === tabId){
-        return treeArray[i];
+    console.log("-----------finding Node-------------");
+    console.log(this.treeArray); // 📌
+    for(var i = 0 ; i < this.treeArray.length; ++i){
+      if(this.treeArray[i].id == tabId){
+        console.log("Found it! --> " + this.treeArray[i].title)
+        return this.treeArray[i];
       }
     }
   }
 
   updateNode(tabId, changeInfo){
     var updatedNode = this.findNode(tabId);
-    updatedNode.link = changeInfo.url;
-    updatedNode.title = changeInfo.title;
-    updatedNode.favicon = changeInfo.favIconUrl;
+    console.log(tabId);
     
-    var index = treeArray.indexOf(this.findNode(tabId));
+    console.log(changeInfo);
+    if (changeInfo.url) {
+      updatedNode.link = changeInfo.url
+    } else if (changeInfo.title) {
+      updatedNode.title = changeInfo.title
+    } else if (changeInfo.favIconUrl) {
+      updatedNode.favicon = changeInfo.favIconUrl
+    }
+    console.log(updatedNode)
+    
+    var index = this.treeArray.indexOf(this.findNode(tabId));
     this.findNode(tabId) = updatedNode;
     if (index !== -1) {
         this.treeArray[index] = updatedNode;
@@ -110,20 +123,31 @@ class tree{
     }
   }
 }
-
-var defTab = whale.tabs.get(1);
-defNode = new Node(defTab.id, defTab.url, defTab.title, defTab.favIconUrl);
+var defNode = {}
 const diveInTree = new tree(defNode);
 
+document.addEventListener('DOMContentLoaded', function() {
+// whale.sidebarAction.onClicked.addListener(function () {
+  console.log("Let's Start!")
+  whale.tabs.query({currentWindow: true}, function(tabs){
+    for (var i = 0; i < tabs.length; i++) {
+        diveInTree.createNode(tabs[i]);
+    }
+  })
+})
+
 whale.tabs.onCreated.addListener((tab) => {
+  console.log("A tab is created!")
   diveInTree.createNode(tab);
 })
 
-whale.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+whale.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  console.log("A tab is updated!")
   diveInTree.updateNode(tabId, changeInfo);
 })
 
 whale.tabs.onRemoved.addListener((tab) => {
+  console.log("A tab is removed!")
   diveInTree.deleteNode(diveInTree.findNode(tab.id));
 })
 
