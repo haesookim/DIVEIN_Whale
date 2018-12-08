@@ -131,17 +131,29 @@ const removePort = whale.runtime.connect({name: 'remove'});
 createPort.onMessage.addListener((tab) => {
   console.log('created a new tab');
   diveInTree.createNode(tab);
+  drawHTML();
 })
 
 updatePort.onMessage.addListener((tabId, changeInfo) => {
   console.log('updated a new tab');
   diveInTree.updateNode(tabId, changeInfo);
+  drawHTML();
 })
 
 removePort.onMessage.addListener((tabId) => {
   console.log('removed a new tab');
   diveInTree.deleteNode(diveInTree.findNode(tabId));
+  drawHTML();
 })
+
+function drawHTML(){
+  var parentNodes = diveInTree.treeArray.filter((Node) => {
+    if(Node.parent == null){
+      return Node;
+    }
+  })
+  parentNodes.forEach(confirm);
+}
 
 var defNode = {}
 var diveInTree = new tree(defNode);
@@ -162,117 +174,81 @@ document.addEventListener('DOMContentLoaded', function() {
 //   console.log(message);
 // })
 
-console.log('Dont die, do kill');
-whale.tabs.query({'currentWindow': true}, (tabs) => {
-  console.log(tabs);
-});
-
-whale.runtime.onMessage.addListener((message) => {
-  console.log(message);
-})
-
 //재귀
 
-parentNodes = theTree.treeArray.map((Node) => {
-  if(Node.parent == null){
-    return Node;
-  }
-})
-
-parentNode.forEach(confirm);
-
 function confirm(Node) {
-  if(Node.children == null){
-    break;
-  } else{
+  if(Node.children.length){
+    draw(Node);
     Node.children.forEach(confirm);
+  } else{
+    draw(Node);
   }
-  draw(Node);
+  // draw(Node);
 }
+
+var tabTree = document.getElementById('tree');
+tabTree.innerHTML = "";
+
 
 function draw(Node){
-  var space = document.createElement("div");
-  var titleText = document.createTextNode(formatTabTitle(Node.title));
-  space.appendChild(titleText);
+  createTreeElement(Node.id, Node.title, Node.favicon);
 }
 
-
-// function updateTabList() {
-//   whale.tabs.query({currentWindow: true}, function(tabs){
-//     var tabTree = document.getElementById('tree');
-//     tabTree.innerHTML = "";
-
-//     for (var i = 0; i < tabs.length; ++i)
-//     {
-//       console.log(tabs[i]);
-  
-//       if (tabs[i].hasOwnProperty('openerTabId') )
-//         {
-//           var treeChildNode = document.getElementById("t" + tabs[i].openerTabId).getElementsByTagName("ul");
-//           if (treeChildNode.length)
-//             {
-//               createTreeElement("li", tabs[i].id, tabs[i].title, treeChildNode[0], tabs[i].favIconUrl);
-//             }
-//           else
-//             {
-//               createTreeElement("ul", tabs[i].openerTabId, "", document.getElementById("t" + tabs[i].openerTabId), "");
-//               createTreeElement("li", tabs[i].id, tabs[i].title, document.getElementById("t" + tabs[i].openerTabId).getElementsByTagName("ul")[0], tabs[i].favIconUrl);
-//             }
-//         }
-//       else
-//         {
-//           createTreeElement("li", tabs[i].id, tabs[i].title, tabTree, tabs[i].favIconUrl);
-//         }
-
-//         // make pinned tabs' background color as green
-//         if (tabs[i].pinned) {
-//           var pinnedNode = document.getElementById("t" + tabs[i].id);
-//           pinnedNode.children[1].style.background = "#68E2BB46";
-//           pinnedNode.children[2].src = getIconPath(tabs[i].pinned)
-//         }
-
-//         // make the active tab's title bold 
-//         if (tabs[i].active) {
-//           document.getElementById("t" + tabs[i].id).style.fontWeight = "bold";
-//         }
-//     }
-//   })
+  // make pinned tabs' background color as green
+// if (tabs[i].pinned) {
+//   var pinnedNode = document.getElementById("t" + tabs[i].id);
+//   pinnedNode.children[1].style.background = "#68E2BB46";
+//   pinnedNode.children[2].src = getIconPath(tabs[i].pinned)
 // }
 
-// function createTreeElement(name, id, title, parent, favIconUrl) {
-//   var node = document.createElement(name);
-//   node.id = "t" + id;
-//   node.innerHTML = "";
-
-//   // set favicon
-//   var favIcon = document.createElement("img");
-//   favIcon.src = favIconUrl;
-
-//   // set title in a tag
-//   var titleA = document.createElement("a");
-//   var titleAText = document.createTextNode(formatTabTitle(title));
-//   titleA.appendChild(titleAText);
-//   // make title clickable to move focus
-//   titleA.addEventListener('click', () => {
-//     activateTab(id);
-//   });
-  
-//   // set status icon
-//   var status = document.createElement("img");
-//   status.src = "../icons/default.svg";
-//   status.addEventListener('click', () => {
-//     changeStatus(id);
-//   });
-
-//   node.appendChild(favIcon);
-//   node.appendChild(titleA);
-//   node.appendChild(status);
-//   parent.appendChild(node);
+//   // make the active tab's title bold 
+// if (tabs[i].active) {
+//   document.getElementById("t" + tabs[i].id).style.fontWeight = "bold";
 // }
 
-// function activateTab(id) {
-//   whale.tabs.update(id, {"active": true});
-// }
+function createTreeElement(id, title, favicon){
+  var component = document.createElement("div");
+
+  // set fold button
+  var foldDiv = document.createElement("div");
+  component.appendChild(foldDiv);
+
+  // set favicon
+  var favIconDiv = document.createElement("div");
+  var favIconImage = document.createElement("img");
+  favIconImage.src = favicon;
+  favIconDiv.appendChild(favIconImage);
+  component.appendChild(favIconDiv);
+
+  // set title in a tag;
+  var titleDiv = document.createElement("div");
+  var titleA = document.createElement("a");
+  var titleAText = document.createTextNode(formatTabTitle(title));
+  titleA.appendChild(titleAText);
+  titleDiv.appendChild(titleA);
+  component.appendChild(titleDiv);
+
+  titleA.addEventListener('click', () => {
+    activateTab(id);
+  });
+
+  // set status icon
+  var statusDiv = document.createElement("div");
+  var status = document.createElement("img");
+  status.src = "../icons/default.svg";
+  statusDiv.appendChild(status);
+  component.appendChild(statusDiv);
+
+  status.addEventListener('click', () => {
+    changeStatus(id);
+  });
+    
+  tabTree.appendChild(component);
+}
+
+function activateTab(id) {
+  whale.tabs.update(id, {"active": true});
+}
 
 function formatTabTitle(title) {
   if(title.length > 35) {
@@ -281,16 +257,16 @@ function formatTabTitle(title) {
   return title;
 }
 
-// // 나중엔 토글(on/off)가 아니라 세 가지 staus가 되어야겠지만..!
-// function changeStatus(id) {
-//   whale.tabs.get(id, function(tab){
-//     whale.tabs.update(id, {'pinned': !tab.pinned})
-//   });
-// }
+// 나중엔 토글(on/off)가 아니라 세 가지 staus가 되어야겠지만..!
+function changeStatus(id) {
+  whale.tabs.get(id, function(tab){
+    whale.tabs.update(id, {'pinned': !tab.pinned})
+  });
+}
 
-// function getIconPath(isPinned) {
-//   return "../icons/" + (isPinned ? "pin" : "default") + ".svg";
-// }
+function getIconPath(isPinned) {
+  return "../icons/" + (isPinned ? "pin" : "default") + ".svg";
+}
 
 //   // 클릭했을 때 그 탭으로 focus 옮겨지도록 ✓
 //   // 탭마다 status(default, checked, pinned 부여)
