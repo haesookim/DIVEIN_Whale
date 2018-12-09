@@ -103,12 +103,12 @@ class tree{
     //if parent, only delete text data(link) of the node
     if (closedNode.children.length != 0){ /*is parent*/
       closedNode.link = null;
-      closedNode.title = ""; // 이름은 그대로 두고 색을 죽여야 하지 않을까요?
-      closedNode.favicon = null; //if loaded favicon exists, load it in (should create defualts setting in css)
+      closedNode.title = "............"; // 이름은 그대로 두고 색을 죽여야 하지 않을까요?
+      closedNode.favicon = "../icons/iconGray_16.svg"; //if loaded favicon exists, load it in (should create defualts setting in css)
 
       // // title 색 죽이기 (error : the color is reset when reloaded)
       // var closedNodeHTML = document.getElementById("n" + closedNode.id);
-      // closedNodeHTML.children[2].children[0].style.color = "#D3D3D3";
+      // closedNodeHTML.children[2].children[0].color = "#D3D3D3";
     }
     //if leaf, delete node
     else {
@@ -201,6 +201,7 @@ function drawHTML(){
   }
   parentNodes.forEach(confirm);
   parentNodes.forEach(indent)
+  diveInTree.treeArray.forEach(statusBackground)
 }
 
 //create tree class 'diveInTree'
@@ -267,6 +268,12 @@ function createTreeElement(id, title, favicon, parent, children){
   favIconDiv.className = "favicon";
   var favIconImage = document.createElement("img");
   favIconImage.src = favicon;
+  console.log("------------------------------")
+  console.log(title)
+  console.log(favicon)
+  if (favicon == undefined || favicon == "chrome://resources/whale/img/favicon.png") {
+    favIconImage.src = "../icons/none.svg"
+  }
   favIconDiv.appendChild(favIconImage);
   component.appendChild(favIconDiv);
 
@@ -302,10 +309,24 @@ function drawStatus(status, id){
   var Node = diveInTree.findNode(id);
   if (!Node.checked && !Node.pinned) {
     status.src = "../icons/default.svg"
+    // nodeHTML.children[2].style.background = "" 
   } else if (Node.checked) {
     status.src = "../icons/checked.svg"
+    // nodeHTML.children[2].style.background = "#60B6FF28"
   } else if (Node.pinned) {
     status.src = "../icons/pin.svg"
+    // nodeHTML.children[2].style.background = "#68E2BB46"
+  }
+}
+
+function statusBackground(Node) {
+  var nodeHTML = document.getElementById("n" + Node.id)
+  if (!Node.checked && !Node.pinned) {
+    nodeHTML.children[2].style.background = "" 
+  } else if (Node.checked) {
+    nodeHTML.children[2].style.background = "#60B6FF28"
+  } else if (Node.pinned) {
+    nodeHTML.children[2].style.background = "#68E2BB46"
   }
 }
 
@@ -344,18 +365,22 @@ function formatTabTitle(title) {
 
 // 나중엔 토글(on/off)가 아니라 세 가지 staus가 되어야겠지만..!
 function changeStatus(status, id) {
-  var changedNode = diveInTree.findNode(id);
+  var changedNode = diveInTree.findNode(id);  
+  var changeNodeHTML = document.getElementById("n" + id)
   if (!changedNode.checked && !changedNode.pinned) {
     changedNode.setChecked()
+    changeNodeHTML.children[2].style.background = "#60B6FF28"
     status.src = "../icons/checked.svg"
   } else if (changedNode.checked) {
     changedNode.setPinned()
+    changeNodeHTML.children[2].style.background = "#68E2BB46"
     status.src = "../icons/pin.svg"
     // whale.tabs.get(id, function(tab){              /* If you want to synchronize pinned nodes with pinned Tabs, activate the codes */
     //   whale.tabs.update(id, {'pinned' : true})
     // })
   } else if (changedNode.pinned) {
     changedNode.setDefault();
+    changeNodeHTML.children[2].style.background = ""
     status.src = "../icons/default.svg"
     // whale.tabs.get(id, function(tab){             /* If you want to synchronize pinned nodes with pinned Tabs, activate the codes */
     //   whale.tabs.update(id, {'pinned' : false})
