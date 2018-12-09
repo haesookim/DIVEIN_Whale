@@ -47,7 +47,7 @@ class tree{
 
   //add a new node to the tree
   createNode(tab){
-    console.log("----creating Node----"); 
+    console.log("----creating Node----");
     var newNode = new Node(tab.id, tab.url, tab.title, tab.favIconUrl);
     this.treeArray.push(newNode);
     // console.log(tab.openerTabId);
@@ -80,7 +80,7 @@ class tree{
   }
 
   updateNode(tabId, changeInfo){
-    console.log("----updating Node----"); 
+    console.log("----updating Node----");
     var updatedNode = this.findNode(tabId);
     if (changeInfo.url) {
       updatedNode.link = changeInfo.url
@@ -99,13 +99,13 @@ class tree{
   // run when tab(node) is closed
   // check if this is correct!!!
   deleteNode(closedNode){
-    console.log("----deleting Node----"); 
+    console.log("----deleting Node----");
     //if parent, only delete text data(link) of the node
     if (closedNode.children.length != 0){ /*is parent*/
       closedNode.link = null;
       closedNode.title = ""; // 이름은 그대로 두고 색을 죽여야 하지 않을까요?
       closedNode.favicon = null; //if loaded favicon exists, load it in (should create defualts setting in css)
-      
+
       // // title 색 죽이기 (error : the color is reset when reloaded)
       // var closedNodeHTML = document.getElementById("n" + closedNode.id);
       // closedNodeHTML.children[2].children[0].style.color = "#D3D3D3";
@@ -128,11 +128,35 @@ class tree{
       }
     }
   }
+
+  navUpdateNode(tabId, transitionQualifiers){
+    var updatedNode = this.findNode(tabId);
+    for (var i = 0; i < transitionQualifiers.length; i++){
+      if (transitionQualifiers[i] == "from_address_bar"){
+        console.log("----detatch the node----");
+        if (updatedNode.parent){
+          for (var i = 0; i < updatedNode.parent.children.length; i++){
+            if (updatedNode.parent.children[i] == updatedNode){
+              updatedNode.parent.children.splice(i, 1);
+              updatedNode.parent = null;
+            }
+          }
+        }
+        break;
+      }
+      else if (transitionQualifiers[i] == "forward_back"){
+        console.log("-----update tab title----");
+        break;
+      }
+    }
+  }
+
 }
 
 const createPort = whale.runtime.connect({name: 'create'});
 const updatePort = whale.runtime.connect({name: 'update'});
 const removePort = whale.runtime.connect({name: 'remove'});
+const navigationPort = whale.runtime.connect({name: 'navigate'});
 
 
 createPort.onMessage.addListener((tab) => {
@@ -157,6 +181,16 @@ removePort.onMessage.addListener((tabId) => {
   drawHTML();
 })
 
+navigationPort.onMessage.addListener((message) =>{
+  console.log('navigate');
+  console.log(message.tabId);
+  console.log(message.transitionQualifiers);
+  diveInTree.navUpdateNode(message.tabId, message.transitionQualifiers);
+  drawHTML();
+})
+
+
+
 
 function drawHTML(){
   var parentNodes = diveInTree.treeArray.filter((Node) => {
@@ -176,15 +210,15 @@ var diveInTree = new tree(defNode);
 console.log(diveInTree);
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("----START----")
-    whale.tabs.query({currentWindow: true}, function(tabs){
-      for (var i = 0; i < tabs.length; i++) {
-        console.log(i)
-        diveInTree.createNode(tabs[i]);
-      }
-      drawHTML();
-    })
+  console.log("----START----")
+  whale.tabs.query({currentWindow: true}, function(tabs){
+    for (var i = 0; i < tabs.length; i++) {
+      console.log(i)
+      diveInTree.createNode(tabs[i]);
+    }
+    drawHTML();
   })
+})
 
 
 // port.onMessage.addListener(message => {
@@ -260,7 +294,7 @@ function createTreeElement(id, title, favicon, parent, children){
   status.addEventListener('click', () => {
     changeStatus(id);
   });
-    
+
   tabTree.appendChild(component);
 }
 
@@ -288,7 +322,7 @@ whale.tabs.onActivated.addListener(function(activeInfo) {
   }
   var activeNodeHTML = document.getElementById("n" + id);
   activeNodeHTML.children[2].children[0].style.fontWeight = "700";
-}) 
+})
 
 function formatTabTitle(title) {
   if(title.length > 35) {
@@ -339,7 +373,7 @@ function superDelete(){
 //   // sidebar 오른쪽에다 status 표시하는 아이콘 넣고
 //   // 이 아이콘 클릭했을 때 status 변하도록
 //   // status 별로 배경색깔 다르게
-  
+
 
 //   //싱크
 // document.addEventListener('DOMContentLoaded', function() {
@@ -353,6 +387,7 @@ function superDelete(){
 // whale.tabs.onActivated.addListener(updateTabList); // to make the title bold
 //   // attached, detached 되었을 때 비활된 창의 sidebar에도 활성화된 창의 탭 트리가 떠버림
 //   // tab query currentWindow 손대야 할 듯
+<<<<<<< HEAD
 
 function indent(Node) {
   if (Node.parent != null) {
@@ -371,3 +406,5 @@ function indent(Node) {
     }
   }
 }
+=======
+>>>>>>> 97ab8baffa47f5443dc6cf5659d81004c1c7326f
