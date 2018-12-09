@@ -395,14 +395,17 @@ function superDelete(){
   var defaultNodes = diveInTree.treeArray.filter(node => {
     return (node.checked == false && node.pinned == false);
   })
+
+
+  console.log('1***************************************')
   superDeletePort.postMessage(defaultNodes);
-  console.log('***************************************')
+  console.log('2***************************************')
+
   console.log(defaultNodes);
   // for(var i = 0 ; i < defaultNodes.length ; i++){
   //   diveInTree.deleteNode(defaultNodes[i]);
   // }
   console.log(diveInTree);
-  drawHTML();
 }
 
 document.getElementById('superDeleteButton').addEventListener('click', () => {
