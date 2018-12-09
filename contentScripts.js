@@ -294,7 +294,6 @@ function createTreeElement(id, title, favicon, parent, children){
   statusDiv.className = "status"
   var status = document.createElement("img");
   drawStatus(status, id);
-  status.src = "../icons/default.svg";
   statusDiv.appendChild(status);
   component.appendChild(statusDiv);
 
