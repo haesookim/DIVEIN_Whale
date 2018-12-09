@@ -129,8 +129,7 @@ class tree{
     }
   }
 
-  //testing
-  navUpdateNode(tabId, transitionType, transitionQualifiers){
+  navUpdateNode(tabId, transitionQualifiers){
     var updatedNode = this.findNode(tabId);
     for (var i = 0; i < transitionQualifiers.length; i++){
       if (transitionQualifiers[i] == "from_address_bar"){
@@ -157,7 +156,6 @@ class tree{
 const createPort = whale.runtime.connect({name: 'create'});
 const updatePort = whale.runtime.connect({name: 'update'});
 const removePort = whale.runtime.connect({name: 'remove'});
-//testing
 const navigationPort = whale.runtime.connect({name: 'navigate'});
 
 
@@ -186,13 +184,8 @@ removePort.onMessage.addListener((tabId) => {
 navigationPort.onMessage.addListener((message) =>{
   console.log('navigate');
   console.log(message.tabId);
-  console.log(message.transitionType);
   console.log(message.transitionQualifiers);
-  /*
-  whale.tabs.get(message.tabId, function(tab)){
-    whale.tabs.onUpdated.addListener((tabId, changeInfo, tab))
-  }*/
-  diveInTree.navUpdateNode(message.tabId, message.transitionType, message.transitionQualifiers);
+  diveInTree.navUpdateNode(message.tabId, message.transitionQualifiers);
   drawHTML();
 })
 

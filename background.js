@@ -39,14 +39,4 @@ whale.runtime.onConnect.addListener(navigationPort => {
       navigationPort.postMessage({tabId : details.tabId, transitionQualifiers: details.transitionQualifiers});
     })
   }
-}
-
-  /*whale.webNavigation.onCommitted.addListener(function(details) {
-    var updatedNode = findNode(details.tabId);
-    if (details.transitionQualifier == "forward_back"){
-    }
-    else (details.transitionQualifier == "from_address_bar"){
-      //updatedNode.parent == null;
-    }
-  })*/
-)
+})
