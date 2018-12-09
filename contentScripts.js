@@ -201,6 +201,7 @@ function drawHTML(){
   }
   parentNodes.forEach(confirm);
   parentNodes.forEach(indent)
+  diveInTree.treeArray.forEach(statusBackground)
 }
 
 //create tree class 'diveInTree'
@@ -308,10 +309,24 @@ function drawStatus(status, id){
   var Node = diveInTree.findNode(id);
   if (!Node.checked && !Node.pinned) {
     status.src = "../icons/default.svg"
+    // nodeHTML.children[2].style.background = "" 
   } else if (Node.checked) {
     status.src = "../icons/checked.svg"
+    // nodeHTML.children[2].style.background = "#60B6FF28"
   } else if (Node.pinned) {
     status.src = "../icons/pin.svg"
+    // nodeHTML.children[2].style.background = "#68E2BB46"
+  }
+}
+
+function statusBackground(Node) {
+  var nodeHTML = document.getElementById("n" + Node.id)
+  if (!Node.checked && !Node.pinned) {
+    nodeHTML.children[2].style.background = "" 
+  } else if (Node.checked) {
+    nodeHTML.children[2].style.background = "#60B6FF28"
+  } else if (Node.pinned) {
+    nodeHTML.children[2].style.background = "#68E2BB46"
   }
 }
 
@@ -351,21 +366,21 @@ function formatTabTitle(title) {
 // 나중엔 토글(on/off)가 아니라 세 가지 staus가 되어야겠지만..!
 function changeStatus(status, id) {
   var changedNode = diveInTree.findNode(id);  
-  var changedNodeHTML = document.getElementById("n" + id)
+  var changeNodeHTML = document.getElementById("n" + id)
   if (!changedNode.checked && !changedNode.pinned) {
     changedNode.setChecked()
-    changedNodeHTML.children[2].style.background = "#60B6FF28"
+    changeNodeHTML.children[2].style.background = "#60B6FF28"
     status.src = "../icons/checked.svg"
   } else if (changedNode.checked) {
     changedNode.setPinned()
-    changedNodeHTML.children[2].style.background = "#68E2BB46"
+    changeNodeHTML.children[2].style.background = "#68E2BB46"
     status.src = "../icons/pin.svg"
     // whale.tabs.get(id, function(tab){              /* If you want to synchronize pinned nodes with pinned Tabs, activate the codes */
     //   whale.tabs.update(id, {'pinned' : true})
     // })
   } else if (changedNode.pinned) {
     changedNode.setDefault();
-    changedNodeHTML.children[2].style.background = ""
+    changeNodeHTML.children[2].style.background = ""
     status.src = "../icons/default.svg"
     // whale.tabs.get(id, function(tab){             /* If you want to synchronize pinned nodes with pinned Tabs, activate the codes */
     //   whale.tabs.update(id, {'pinned' : false})
