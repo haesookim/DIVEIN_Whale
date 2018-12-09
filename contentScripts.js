@@ -166,6 +166,7 @@ function drawHTML(){
     tabTree.removeChild(tabTree.firstChild);
   }
   parentNodes.forEach(confirm);
+  parentNodes.forEach(indent)
 }
 
 //create tree class 'diveInTree'
@@ -207,16 +208,20 @@ tabTree.innerHTML = "";
 
 
 function draw(Node){
-  createTreeElement(Node.id, Node.title, Node.favicon, Node.parent);
+  createTreeElement(Node.id, Node.title, Node.favicon, Node.parent, Node.children);
 }
 
 
+function createTreeElement(id, title, favicon, parent, children){
+  var family = document.createElement("div");
+  family.className = "family"
 
-function createTreeElement(id, title, favicon, parent){
   var component = document.createElement("div");
   component.className = "node";
   component.id = "n" + id;
+  if (children.length > 0) {component.className += " parent"}
   if (parent) {component.className += " child"}
+  family.appendChild(component)
 
   // set fold button
   var foldDiv = document.createElement("div");
@@ -348,3 +353,21 @@ function superDelete(){
 // whale.tabs.onActivated.addListener(updateTabList); // to make the title bold
 //   // attached, detached 되었을 때 비활된 창의 sidebar에도 활성화된 창의 탭 트리가 떠버림
 //   // tab query currentWindow 손대야 할 듯
+
+function indent(Node) {
+  if (Node.parent != null) {
+    var parentHTML = document.getElementById("n" + Node.parent.id)
+    var pml = window.getComputedStyle(parentHTML).marginLeft
+    pml = parseInt(pml);
+    var nodeHTML = document.getElementById("n" + Node.id)
+    var ml = window.getComputedStyle(nodeHTML).marginLeft;
+    ml = ml.replace("px", " ");
+    ml = parseInt(ml) + pml;    
+    nodeHTML.style.marginLeft = ml + "px"
+  }
+  if (Node.children.length > 0) {
+    for (var i = 0; i < Node.children.length; i++) {
+      indent(Node.children[i])
+    }
+  }
+}
