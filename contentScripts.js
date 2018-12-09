@@ -157,7 +157,6 @@ removePort.onMessage.addListener((tabId) => {
   drawHTML();
 })
 
-
 function drawHTML(){
   var parentNodes = diveInTree.treeArray.filter((Node) => {
     return Node.parent == null;
@@ -208,6 +207,7 @@ tabTree.innerHTML = "";
 
 function draw(Node){
   createTreeElement(Node.id, Node.title, Node.favicon, Node.parent);
+  drawStatus(Node);
 }
 
 
@@ -255,6 +255,8 @@ function createTreeElement(id, title, favicon, parent){
   status.addEventListener('click', () => {
     changeStatus(id);
   });
+
+  drawStatus(id);
     
   tabTree.appendChild(component);
 }
@@ -292,6 +294,20 @@ function formatTabTitle(title) {
   return title;
 }
 
+function drawStatus(Node){
+  var changedNodeHTML = document.getElementById("n" + id)
+  var statusIconPath = changedNodeHTML.children[3].children[0]
+
+  if (!Node.checked && !Node.pinned) {
+    statusIconPath.src = "../icons/default.svg"
+  } else if (Node.checked) {
+    statusIconPath.src = "../icons/checked.svg"
+  } else if (Node.pinned) {
+    statusIconPath.src = "../icons/pin.svg"
+  }
+}
+
+
 // 나중엔 토글(on/off)가 아니라 세 가지 staus가 되어야겠지만..!
 function changeStatus(id) {
   var changedNode = diveInTree.findNode(id);
@@ -313,6 +329,7 @@ function changeStatus(id) {
     //   whale.tabs.update(id, {'pinned' : false})
     // })
   }
+  drawStatus(id);
 }
 
 // for super Delete
@@ -327,6 +344,10 @@ function superDelete(){
   console.log(diveInTree);
   drawHTML();
 }
+
+document.getElementById('superDeleteButton').addEventListener('click', () => {
+  superDelete();
+});
 
 //   // 클릭했을 때 그 탭으로 focus 옮겨지도록 ✓
 //   // 탭마다 status(default, checked, pinned 부여)
