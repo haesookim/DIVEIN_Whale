@@ -49,7 +49,9 @@ whale.runtime.onConnect.addListener(superDeletePort => {
         return Node.id
       })
       console.log(defaultNodesIds);
-      whale.tabs.remove(defaultNodesIds);
+      for(var i = 0; i<defaultNodesIds.length; i++){
+        whale.tabs.remove(defaultNodesIds[i]);
+      }
     })
   }
 })
