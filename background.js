@@ -35,8 +35,8 @@ whale.runtime.onConnect.addListener(navigationPort => {
     whale.webNavigation.onCommitted.addListener((details) =>{
       console.log('navigation working');
       console.log(details.tabId);
-      console.log(details.transitionType);
-      navigationPort.postMessage({tabId : details.tabId, transitionType: details.transitionType, transitionQualifiers: details.transitionQualifiers});
+      console.log(details.transitionQualifiers);
+      navigationPort.postMessage({tabId : details.tabId, transitionQualifiers: details.transitionQualifiers});
     })
   }
 }

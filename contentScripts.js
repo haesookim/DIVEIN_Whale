@@ -143,10 +143,15 @@ class tree{
             }
           }
         }
-        //updatedNode.parent = null;
+        break;
+      }
+      else if (transitionQualifiers[i] == "forward_back"){
+        console.log("-----update tab title----");
+        break;
       }
     }
   }
+
 }
 
 const createPort = whale.runtime.connect({name: 'create'});
