@@ -47,13 +47,11 @@ class tree{
 
   //add a new node to the tree
   createNode(tab){
-    console.log("----creating Node----");
     var newNode = new Node(tab.id, tab.url, tab.title, tab.favIconUrl);
     this.treeArray.push(newNode);
     // console.log(tab.openerTabId);
     if(tab.url != 'chrome://newtab/'){
       if(tab.openerTabId != null){
-        console.log('not null');
         // console.log(this.findNode(tab.openerTabId));
         this.setParent(this.findNode(tab.openerTabId), newNode);
       }
@@ -63,7 +61,6 @@ class tree{
   //set parent - child relationship
   // called by
   setParent(parentNode, childNode){
-    console.log("----set Parent----");
     parentNode.children.push(childNode);
     childNode.parent = parentNode;
   }
@@ -80,7 +77,6 @@ class tree{
   }
 
   updateNode(tabId, changeInfo){
-    console.log("----updating Node----");
     var updatedNode = this.findNode(tabId);
     if (changeInfo.url) {
       updatedNode.link = changeInfo.url
@@ -113,13 +109,14 @@ class tree{
     //if leaf, delete node
     else {
       if(closedNode.parent){
+        console.log(closedNode)
         for (var i = 0; i < closedNode.parent.children.length; i++){
           if (closedNode.parent.children[i] == closedNode){
             closedNode.parent.children.splice(i, 1);
             closedNode.parent = null;
-            console.log("turn " + i);
             const idx = this.treeArray.indexOf(closedNode);
             if (idx > -1) this.treeArray.splice(idx, 1);
+            drawHTML();
           }
         }
       }else {
@@ -133,7 +130,6 @@ class tree{
     var updatedNode = this.findNode(tabId);
     for (var i = 0; i < transitionQualifiers.length; i++){
       if (transitionQualifiers[i] == "from_address_bar"){
-        console.log("----detatch the node----");
         if (updatedNode.parent){
           for (var i = 0; i < updatedNode.parent.children.length; i++){
             if (updatedNode.parent.children[i] == updatedNode){
@@ -145,7 +141,6 @@ class tree{
         break;
       }
       else if (transitionQualifiers[i] == "forward_back"){
-        console.log("-----update tab title----");
         break;
       }
     }
@@ -160,31 +155,21 @@ const navigationPort = whale.runtime.connect({name: 'navigate'});
 
 
 createPort.onMessage.addListener((tab) => {
-  console.log('created a new tab');
   diveInTree.createNode(tab);
   drawHTML();
 })
 
 updatePort.onMessage.addListener((message) => {
-  console.log('updated a new tab');
-  console.log(message.tabId);
-  console.log(message.changeInfo);
-  console.log(message.tab);
   diveInTree.updateNode(message.tabId, message.changeInfo);
   drawHTML();
 })
 
 removePort.onMessage.addListener((tabId) => {
-  console.log('removed a new tab');
-  console.log(tabId);
   diveInTree.deleteNode(diveInTree.findNode(tabId));
   drawHTML();
 })
 
 navigationPort.onMessage.addListener((message) =>{
-  console.log('navigate');
-  console.log(message.tabId);
-  console.log(message.transitionQualifiers);
   diveInTree.navUpdateNode(message.tabId, message.transitionQualifiers);
   drawHTML();
 })
@@ -208,13 +193,9 @@ function drawHTML(){
 var defNode = {};
 var diveInTree = new tree(defNode);
 
-console.log(diveInTree);
-
 document.addEventListener('DOMContentLoaded', function() {
-  console.log("----START----")
   whale.tabs.query({currentWindow: true}, function(tabs){
     for (var i = 0; i < tabs.length; i++) {
-      console.log(i)
       diveInTree.createNode(tabs[i]);
     }
     drawHTML();
@@ -268,9 +249,6 @@ function createTreeElement(id, title, favicon, parent, children){
   favIconDiv.className = "favicon";
   var favIconImage = document.createElement("img");
   favIconImage.src = favicon;
-  console.log("------------------------------")
-  console.log(title)
-  console.log(favicon)
   if (favicon == undefined || favicon == "chrome://resources/whale/img/favicon.png") {
     favIconImage.src = "../icons/none.svg"
   }
@@ -397,15 +375,11 @@ function superDelete(){
   })
 
 
-  console.log('1***************************************')
   superDeletePort.postMessage(defaultNodes);
-  console.log('2***************************************')
 
-  console.log(defaultNodes);
   // for(var i = 0 ; i < defaultNodes.length ; i++){
   //   diveInTree.deleteNode(defaultNodes[i]);
   // }
-  console.log(diveInTree);
 }
 
 document.getElementById('superDeleteButton').addEventListener('click', () => {
