@@ -375,16 +375,16 @@ function changeStatus(status, id) {
     changedNode.setPinned()
     changeNodeHTML.children[2].style.background = "#68E2BB46"
     status.src = "../icons/pin.svg"
-    // whale.tabs.get(id, function(tab){              /* If you want to synchronize pinned nodes with pinned Tabs, activate the codes */
-    //   whale.tabs.update(id, {'pinned' : true})
-    // })
+    whale.tabs.get(id, function(tab){              /* If you want to synchronize pinned nodes with pinned Tabs, activate the codes */
+      whale.tabs.update(id, {'pinned' : true})
+    })
   } else if (changedNode.pinned) {
     changedNode.setDefault();
     changeNodeHTML.children[2].style.background = ""
     status.src = "../icons/default.svg"
-    // whale.tabs.get(id, function(tab){             /* If you want to synchronize pinned nodes with pinned Tabs, activate the codes */
-    //   whale.tabs.update(id, {'pinned' : false})
-    // })
+    whale.tabs.get(id, function(tab){             /* If you want to synchronize pinned nodes with pinned Tabs, activate the codes */
+      whale.tabs.update(id, {'pinned' : false})
+    })
   }
 }
 
