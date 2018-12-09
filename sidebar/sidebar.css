@@ -1,3 +1,33 @@
+.gnb {
+    padding: 0 5 0 5;
+}
+#logoIcon {
+    width: 20px;
+    height: 20px;
+    margin: 0 5 0 5;
+}
+
+.logo {
+    display: inline-block;
+}
+
+.gnb button {
+    display: inline-block;
+    float: right;
+    margin-top: 15px;
+    padding: 5px 5px;
+    background-color: white;
+    color: black;
+    border: 2px solid #e7e7e7;
+    border-radius: 15px;
+
+}
+
+
+.gnb button:hover {
+    background-color: #e7e7e7;
+}
+
 .node {
     padding: 5 0 5 0;
     margin-left: 16px;
@@ -24,6 +54,7 @@
 
 .title {
     display: inline-block;
+    padding: 4 4 4 4;
 }
 
 .title a {
