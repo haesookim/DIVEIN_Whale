@@ -29,8 +29,27 @@ whale.runtime.onConnect.addListener(removePort => {
   }
 })
 
+//testing
+whale.runtime.onConnect.addListener(navigationPort => {
+  if (navigationPort.name === 'navigate'){
+    whale.webNavigation.onCommitted.addListener((details) =>{
+      console.log('navigation working');
+      console.log(details.tabId);
+      console.log(details.transitionQualifiers);
+      navigationPort.postMessage({tabId : details.tabId, transitionQualifiers: details.transitionQualifiers});
+    })
+  }
+})
 
-
-
-
-
+whale.runtime.onConnect.addListener(superDeletePort => {
+  if (superDeletePort.name === 'superDelete'){
+    superDeletePort.onMessage.addListener(message => {
+      console.log(message);
+      var defaultNodesIds = message.map((Node)=>{
+        return Node.id
+      })
+      console.log(defaultNodesIds);
+      whale.tabs.remove(defaultNodesIds);
+    })
+  }
+})
