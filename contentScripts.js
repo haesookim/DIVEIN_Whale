@@ -89,11 +89,7 @@ class tree{
     } else if (changeInfo.favIconUrl) {
       updatedNode.favicon = changeInfo.favIconUrl
     }
-    console.log("-*-*-*-*-*-*-")
-    console.log(diveInTree)
-    console.log("-*-*-*-*-*-*-")
   }
-
   //insert node to the tree accordingly
   // insertNode(newNode){
 
@@ -109,6 +105,10 @@ class tree{
       closedNode.link = null;
       closedNode.title = ""; // 이름은 그대로 두고 색을 죽여야 하지 않을까요?
       closedNode.favicon = null; //if loaded favicon exists, load it in (should create defualts setting in css)
+      
+      // // title 색 죽이기 (error : the color is reset when reloaded)
+      // var closedNodeHTML = document.getElementById("n" + closedNode.id);
+      // closedNodeHTML.children[2].children[0].style.color = "#D3D3D3";
     }
     //if leaf, delete node
     else {
@@ -207,25 +207,16 @@ tabTree.innerHTML = "";
 
 
 function draw(Node){
-  createTreeElement(Node.id, Node.title, Node.favicon);
+  createTreeElement(Node.id, Node.title, Node.favicon, Node.parent);
 }
 
-  // make pinned tabs' background color as green
-// if (tabs[i].pinned) {
-//   var pinnedNode = document.getElementById("t" + tabs[i].id);
-//   pinnedNode.children[1].style.background = "#68E2BB46";
-//   pinnedNode.children[2].src = getIconPath(tabs[i].pinned)
-// }
-
-//   // make the active tab's title bold 
-// if (tabs[i].active) {
-//   document.getElementById("t" + tabs[i].id).style.fontWeight = "bold";
-// }
 
 
-function createTreeElement(id, title, favicon){
+function createTreeElement(id, title, favicon, parent){
   var component = document.createElement("div");
   component.className = "node";
+  component.id = "n" + id;
+  if (parent) {component.className += " child"}
 
   // set fold button
   var foldDiv = document.createElement("div");
@@ -272,6 +263,28 @@ function activateTab(id) {
   whale.tabs.update(id, {"active": true});
 }
 
+function inactivateNode(activeTabId) {
+  for (var i = 0; i < diveInTree.treeArray.length; i++) {
+    if (diveInTree.treeArray[i].id != activeTabId) {
+      diveInTree.treeArray[i].setInactive();
+    }
+  }
+}
+
+whale.tabs.onActivated.addListener(function(activeInfo) {
+  var id = activeInfo.tabId
+  var activeNode = diveInTree.findNode(id);
+  if (!activeNode.active) activeNode.setActive();
+  inactivateNode(id);
+
+  var rest = document.getElementsByTagName("a");
+  for (var i = 0; i < rest.length; i++) {
+    rest[i].style.fontWeight = "300"
+  }
+  var activeNodeHTML = document.getElementById("n" + id);
+  activeNodeHTML.children[2].children[0].style.fontWeight = "700";
+}) 
+
 function formatTabTitle(title) {
   if(title.length > 35) {
     title = title.substring(0, 32) + "...";
@@ -281,13 +294,25 @@ function formatTabTitle(title) {
 
 // 나중엔 토글(on/off)가 아니라 세 가지 staus가 되어야겠지만..!
 function changeStatus(id) {
-  whale.tabs.get(id, function(tab){
-    whale.tabs.update(id, {'pinned': !tab.pinned})
-  });
-}
-
-function getIconPath(isPinned) {
-  return "../icons/" + (isPinned ? "pin" : "default") + ".svg";
+  var changedNode = diveInTree.findNode(id);
+  var changedNodeHTML = document.getElementById("n" + id)
+  var statusIconPath = changedNodeHTML.children[3].children[0]
+  if (!changedNode.checked && !changedNode.pinned) {
+    changedNode.setChecked()
+    statusIconPath.src = "../icons/checked.svg"
+  } else if (changedNode.checked) {
+    changedNode.setPinned()
+    statusIconPath.src = "../icons/pin.svg"
+    // whale.tabs.get(id, function(tab){              /* If you want to synchronize pinned nodes with pinned Tabs, activate the codes */
+    //   whale.tabs.update(id, {'pinned' : true})
+    // })
+  } else if (changedNode.pinned) {
+    changedNode.setDefault();
+    statusIconPath.src = "../icons/default.svg"
+    // whale.tabs.get(id, function(tab){             /* If you want to synchronize pinned nodes with pinned Tabs, activate the codes */
+    //   whale.tabs.update(id, {'pinned' : false})
+    // })
+  }
 }
 
 // for super Delete

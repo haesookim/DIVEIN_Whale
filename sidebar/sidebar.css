@@ -3,9 +3,12 @@ ul {
     list-style: none;
 }
 .node {
-    margin: 10 0 10 0;
+    padding: 5 0 5 0;
 }
 
+.child {
+    margin-left: 36px;  /* child의 child면? */
+}
 .favicon {
     display: inline-block;
 }
@@ -23,6 +26,7 @@ ul {
 
 .title a {
     cursor: pointer;
+    font-weight: 300;
 }
 
 .status {
