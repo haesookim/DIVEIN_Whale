@@ -1,14 +1,16 @@
-ul {
-    padding-left: 20px;
-    list-style: none;
-}
 .node {
     padding: 5 0 5 0;
+    margin-left: 16px;
 }
-
+/* 
 .child {
-    margin-left: 36px;  /* child의 child면? */
+    margin-left: 25px; 
 }
+.child.parent + .child {
+    margin-left: 50px;
+} 
+*/
+
 .favicon {
     display: inline-block;
 }
