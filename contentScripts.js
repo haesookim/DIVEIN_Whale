@@ -405,7 +405,6 @@ document.getElementById('superDeleteButton').addEventListener('click', () => {
 // whale.tabs.onActivated.addListener(updateTabList); // to make the title bold
 //   // attached, detached 되었을 때 비활된 창의 sidebar에도 활성화된 창의 탭 트리가 떠버림
 //   // tab query currentWindow 손대야 할 듯
-<<<<<<< HEAD
 
 function indent(Node) {
   if (Node.parent != null) {
@@ -424,5 +423,3 @@ function indent(Node) {
     }
   }
 }
-=======
->>>>>>> 97ab8baffa47f5443dc6cf5659d81004c1c7326f
