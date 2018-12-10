@@ -146,6 +146,12 @@ class tree{
     }
   }
 
+  removeNode(tabId){
+    if(this.findNode(tabId)){
+      whale.tabs.remove(tabId);
+    }
+  }
+
 }
 
 const createPort = whale.runtime.connect({name: 'create'});
@@ -239,11 +245,6 @@ function createTreeElement(id, title, favicon, parent, children){
   if (parent) {component.className += " child"}
   family.appendChild(component)
 
-  // set fold button
-  var foldDiv = document.createElement("div");
-  foldDiv.className = "folder";
-  component.appendChild(foldDiv);
-
   // set favicon
   var favIconDiv = document.createElement("div");
   favIconDiv.className = "favicon";
@@ -267,6 +268,16 @@ function createTreeElement(id, title, favicon, parent, children){
   titleA.addEventListener('click', () => {
     activateTab(id);
   });
+
+  // set delete button
+  var deleteButtonDiv = document.createElement("div");
+  deleteButtonDiv.innerHTML = "delete";
+  component.appendChild(deleteButtonDiv);
+
+  deleteButtonDiv.addEventListener('click', () => {
+    console.log(id);
+    diveInTree.removeNode(id);
+  })
 
   // set status icon
   var statusDiv = document.createElement("div");
