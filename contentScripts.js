@@ -287,7 +287,7 @@ function drawStatus(status, id){
   var Node = diveInTree.findNode(id);
   if (!Node.checked && !Node.pinned) {
     status.src = "../icons/default.svg"
-    // nodeHTML.children[2].style.background = "" 
+    // nodeHTML.children[2].style.background = ""
   } else if (Node.checked) {
     status.src = "../icons/checked.svg"
     // nodeHTML.children[2].style.background = "#60B6FF28"
@@ -300,7 +300,7 @@ function drawStatus(status, id){
 function statusBackground(Node) {
   var nodeHTML = document.getElementById("n" + Node.id)
   if (!Node.checked && !Node.pinned) {
-    nodeHTML.children[2].style.background = "" 
+    nodeHTML.children[2].style.background = ""
   } else if (Node.checked) {
     nodeHTML.children[2].style.background = "#60B6FF28"
   } else if (Node.pinned) {
@@ -343,7 +343,7 @@ function formatTabTitle(title) {
 
 // 나중엔 토글(on/off)가 아니라 세 가지 staus가 되어야겠지만..!
 function changeStatus(status, id) {
-  var changedNode = diveInTree.findNode(id);  
+  var changedNode = diveInTree.findNode(id);
   var changeNodeHTML = document.getElementById("n" + id)
   if (!changedNode.checked && !changedNode.pinned) {
     changedNode.setChecked()
@@ -422,7 +422,7 @@ function indent(Node) {
     var nodeHTML = document.getElementById("n" + Node.id)
     var ml = window.getComputedStyle(nodeHTML).marginLeft;
     ml = ml.replace("px", " ");
-    ml = parseInt(ml) + pml;    
+    ml = parseInt(ml) + pml;
     nodeHTML.style.marginLeft = ml + "px"
   }
   if (Node.children.length > 0) {
