@@ -116,7 +116,7 @@ class tree{
             closedNode.parent = null;
             const idx = this.treeArray.indexOf(closedNode);
             if (idx > -1) this.treeArray.splice(idx, 1);
-            drawHTML();
+            break;
           }
         }
       }else {
@@ -373,9 +373,19 @@ function superDelete(){
   var defaultNodes = diveInTree.treeArray.filter(node => {
     return (node.checked == false && node.pinned == false);
   })
+  var defaultNodesId = defaultNodes.map(Node => {
+    return Node.id;
+  })
+  console.log(defaultNodesId);
 
+  defaultNodesId.sort(function(a, b){
+    return b-a;
+  })
 
-  superDeletePort.postMessage(defaultNodes);
+  console.log(defaultNodes);
+  console.log(defaultNodesId);
+
+  superDeletePort.postMessage(defaultNodesId);
 
   // for(var i = 0 ; i < defaultNodes.length ; i++){
   //   diveInTree.deleteNode(defaultNodes[i]);

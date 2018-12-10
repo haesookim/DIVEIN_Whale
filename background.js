@@ -35,11 +35,9 @@ whale.runtime.onConnect.addListener(navigationPort => {
 whale.runtime.onConnect.addListener(superDeletePort => {
   if (superDeletePort.name === 'superDelete'){
     superDeletePort.onMessage.addListener(message => {
-      var defaultNodesIds = message.map((Node)=>{
-        return Node.id
-      })
-      for(var i = 0; i<defaultNodesIds.length; i++){
-        whale.tabs.remove(defaultNodesIds[i]);
+ 
+      for(var i = 0; i<message.length; i++){
+        whale.tabs.remove(message[i]);
       }
     })
   }
