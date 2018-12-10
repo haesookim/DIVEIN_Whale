@@ -1,6 +1,6 @@
 {
   "name": "DIVE IN",
-  "description": "Extension for Tab hierarchy definition and marking",
+  "description": "넘치고 또 넘치는 탭들, 알아서 정리해 줄게요.",
   "version": "1.0",
   "icons": {
     "128": "icons/icon_128.png"},

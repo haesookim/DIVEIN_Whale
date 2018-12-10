@@ -376,14 +376,11 @@ function superDelete(){
   var defaultNodesId = defaultNodes.map(Node => {
     return Node.id;
   })
-  console.log(defaultNodesId);
 
   defaultNodesId.sort(function(a, b){
     return b-a;
   })
 
-  console.log(defaultNodes);
-  console.log(defaultNodesId);
 
   superDeletePort.postMessage(defaultNodesId);
 
