@@ -242,10 +242,10 @@ document.addEventListener('DOMContentLoaded', function() {
         var toActivate = diveInTree.findNode(tabs[i].id);
         toActivate.active = true;
       }
-      /*if (tabs[i].pinned){
+      if (tabs[i].pinned){
         var toPin = diveInTree.findNode(tabs[i].id);
-        toActivate.setPinned();
-      }*/
+        toPin.setPinned();
+      }
     }
     drawHTML();
   })
