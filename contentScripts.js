@@ -128,7 +128,7 @@ class tree{
     var updatedNode = this.findNode(tabId);
     for (var i = 0; i < transitionQualifiers.length; i++){
       if (transitionQualifiers[i] == "from_address_bar"){
-        if (updatedNode.parent){
+        if (updatedNode.parent != null){
           for (var i = 0; i < updatedNode.parent.children.length; i++){
             if (updatedNode.parent.children[i] == updatedNode){
               updatedNode.parent.children.splice(i, 1);
@@ -170,6 +170,18 @@ const navigationPort = whale.runtime.connect({name: 'navigate'});
 
 createPort.onMessage.addListener((tab) => {
   diveInTree.createNode(tab);
+  if (tab.active){
+    console.log("hmm");
+    var toDeactivate = diveInTree.treeArray.filter((Node) => {
+      return Node.active == true;
+    })
+    for (var i = 0; i < toDeactivate.length; i++){
+      toDeactivate[i].active = false;
+    }
+    var openedActive = diveInTree.findNode(tab.id);
+    openedActive.active = true;
+
+  }
   drawHTML();
 })
 
@@ -195,12 +207,27 @@ function drawHTML(){
   var parentNodes = diveInTree.treeArray.filter((Node) => {
     return Node.parent == null;
   })
-    while(tabTree.hasChildNodes()){
+  while(tabTree.hasChildNodes()){
     tabTree.removeChild(tabTree.firstChild);
   }
   parentNodes.forEach(confirm);
   parentNodes.forEach(indent)
   diveInTree.treeArray.forEach(statusBackground)
+
+  //testing active draw
+  diveInTree.treeArray.forEach(activeStatus);
+}
+
+function activeStatus(Node) {
+  var rest = document.getElementsByTagName("a");
+  for (var i = 0; i < rest.length; i++) {
+    rest[i].style.fontWeight = "300"
+  }
+  if (Node.active) {
+    console.log(Node.title);
+    var activeNodeHTML = document.getElementById("n" + Node.id);
+    activeNodeHTML.style.fontWeight = "700";
+  }
 }
 
 //create tree class 'diveInTree'
@@ -211,6 +238,14 @@ document.addEventListener('DOMContentLoaded', function() {
   whale.tabs.query({currentWindow: true}, function(tabs){
     for (var i = 0; i < tabs.length; i++) {
       diveInTree.createNode(tabs[i]);
+      if (tabs[i].active){
+        var toActivate = diveInTree.findNode(tabs[i].id);
+        toActivate.active = true;
+      }
+      /*if (tabs[i].pinned){
+        var toPin = diveInTree.findNode(tabs[i].id);
+        toActivate.setPinned();
+      }*/
     }
     drawHTML();
   })
@@ -343,13 +378,7 @@ whale.tabs.onActivated.addListener(function(activeInfo) {
   var activeNode = diveInTree.findNode(id);
   if (!activeNode.active) activeNode.setActive();
   inactivateNode(id);
-
-  var rest = document.getElementsByTagName("a");
-  for (var i = 0; i < rest.length; i++) {
-    rest[i].style.fontWeight = "300"
-  }
-  var activeNodeHTML = document.getElementById("n" + id);
-  activeNodeHTML.children[2].children[0].style.fontWeight = "700";
+  drawHTML();
 })
 
 function formatTabTitle(title) {
