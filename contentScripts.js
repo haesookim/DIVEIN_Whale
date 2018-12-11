@@ -95,7 +95,6 @@ class tree{
   // run when tab(node) is closed
   // check if this is correct!!!
   deleteNode(closedNode){
-    console.log("----deleting Node----");
     //if parent, only delete text data(link) of the node
     if (closedNode.children.length != 0){ /*is parent*/
       closedNode.link = null;
@@ -109,18 +108,17 @@ class tree{
     //if leaf, delete node
     else {
       if(closedNode.parent){
-        console.log(closedNode)
         for (var i = 0; i < closedNode.parent.children.length; i++){
           if (closedNode.parent.children[i] == closedNode){
             closedNode.parent.children.splice(i, 1);
             closedNode.parent = null;
-            const idx = this.treeArray.indexOf(closedNode);
-            if (idx > -1) this.treeArray.splice(idx, 1);
             break;
           }
         }
+        var idx = this.treeArray.indexOf(closedNode);
+        if (idx > -1) this.treeArray.splice(idx, 1);
       }else {
-        const idx = this.treeArray.indexOf(closedNode);
+        var idx = this.treeArray.indexOf(closedNode);
         if (idx > -1) this.treeArray.splice(idx, 1);
       }
     }
@@ -130,7 +128,7 @@ class tree{
     var updatedNode = this.findNode(tabId);
     for (var i = 0; i < transitionQualifiers.length; i++){
       if (transitionQualifiers[i] == "from_address_bar"){
-        if (updatedNode.parent){
+        if (updatedNode.parent != null){
           for (var i = 0; i < updatedNode.parent.children.length; i++){
             if (updatedNode.parent.children[i] == updatedNode){
               updatedNode.parent.children.splice(i, 1);
@@ -146,6 +144,22 @@ class tree{
     }
   }
 
+  removeNode(tabId){
+    if(this.findNode(tabId).link == null){
+      if(this.findNode(tabId).children.length == 0){
+        console.log('debuggggggggggggggggggggggggggggggging');
+        console.log(this.findNode(tabId));
+        var idxx = this.treeArray.indexOf(this.findNode(tabId));
+        if (idxx > -1) this.treeArray.splice(idxx, 1);
+        drawHTML();
+      }
+    }else{
+      whale.tabs.remove(tabId);
+    }
+    // console.log('this is treeArray***************************');
+    // console.log(diveInTree.treeArray);
+  }
+
 }
 
 const createPort = whale.runtime.connect({name: 'create'});
@@ -156,6 +170,18 @@ const navigationPort = whale.runtime.connect({name: 'navigate'});
 
 createPort.onMessage.addListener((tab) => {
   diveInTree.createNode(tab);
+  if (tab.active){
+    console.log("hmm");
+    var toDeactivate = diveInTree.treeArray.filter((Node) => {
+      return Node.active == true;
+    })
+    for (var i = 0; i < toDeactivate.length; i++){
+      toDeactivate[i].active = false;
+    }
+    var openedActive = diveInTree.findNode(tab.id);
+    openedActive.active = true;
+
+  }
   drawHTML();
 })
 
@@ -187,6 +213,21 @@ function drawHTML(){
   parentNodes.forEach(confirm);
   parentNodes.forEach(indent)
   diveInTree.treeArray.forEach(statusBackground)
+
+  //testing active draw
+  diveInTree.treeArray.forEach(activeStatus);
+}
+
+function activeStatus(Node) {
+  var rest = document.getElementsByTagName("a");
+  for (var i = 0; i < rest.length; i++) {
+    rest[i].style.fontWeight = "300"
+  }
+  if (Node.active) {
+    console.log(Node.title);
+    var activeNodeHTML = document.getElementById("n" + Node.id);
+    activeNodeHTML.style.fontWeight = "700";
+  }
 }
 
 //create tree class 'diveInTree'
@@ -197,6 +238,14 @@ document.addEventListener('DOMContentLoaded', function() {
   whale.tabs.query({currentWindow: true}, function(tabs){
     for (var i = 0; i < tabs.length; i++) {
       diveInTree.createNode(tabs[i]);
+      if (tabs[i].active){
+        var toActivate = diveInTree.findNode(tabs[i].id);
+        toActivate.active = true;
+      }
+      if (tabs[i].pinned){
+        var toPin = diveInTree.findNode(tabs[i].id);
+        toPin.setPinned();
+      }
     }
     drawHTML();
   })
@@ -239,11 +288,6 @@ function createTreeElement(id, title, favicon, parent, children){
   if (parent) {component.className += " child"}
   family.appendChild(component)
 
-  // set fold button
-  var foldDiv = document.createElement("div");
-  foldDiv.className = "folder";
-  component.appendChild(foldDiv);
-
   // set favicon
   var favIconDiv = document.createElement("div");
   favIconDiv.className = "favicon";
@@ -267,6 +311,15 @@ function createTreeElement(id, title, favicon, parent, children){
   titleA.addEventListener('click', () => {
     activateTab(id);
   });
+
+  // set delete button
+  var deleteButtonDiv = document.createElement("div");
+  deleteButtonDiv.innerHTML = "delete";
+  component.appendChild(deleteButtonDiv);
+
+  deleteButtonDiv.addEventListener('click', () => {
+    diveInTree.removeNode(id);
+  })
 
   // set status icon
   var statusDiv = document.createElement("div");
@@ -332,6 +385,7 @@ whale.tabs.onActivated.addListener(function(activeInfo) {
   }
   var activeNodeHTML = document.getElementById("n" + id);
   activeNodeHTML.children[2].children[0].style.fontWeight = "700";
+  drawHTML();
 })
 
 function formatTabTitle(title) {
@@ -373,21 +427,63 @@ function superDelete(){
   var defaultNodes = diveInTree.treeArray.filter(node => {
     return (node.checked == false && node.pinned == false);
   })
-  var defaultNodesId = defaultNodes.map(Node => {
+
+  var defaultNodesId = defaultNodes.map(Node =>{
     return Node.id;
   })
-
-  defaultNodesId.sort(function(a, b){
+  var reverseDefaultNodesId = defaultNodesId.sort(function(a, b){
     return b-a;
   })
+  var reverseDefaultNodes = reverseDefaultNodesId.map(id =>{
+    return diveInTree.findNode(id);
+  })
 
+  console.log('this is reverseDefaultNodes***************************');
+  console.log(reverseDefaultNodes);
 
-  superDeletePort.postMessage(defaultNodesId);
+  for(var i =0; i<reverseDefaultNodes.length ;i++){
+    if(reverseDefaultNodes[i].link == null){
+      console.log('b');
+      console.log(reverseDefaultNodes[i].children.length);
+      if(checkChildrenStatus(reverseDefaultNodes[i])){
+        console.log('bb');
+        var idx = diveInTree.treeArray.indexOf(reverseDefaultNodes[i]);
+        console.log(idx);
+        diveInTree.treeArray.splice(idx, 1);
+        console.log(diveInTree.treeArray);
+      }
+    }else{
+      console.log('a');
+      whale.tabs.remove(reverseDefaultNodes[i].id);
+      // toDelete.push(reverseDefaultNodes[i]);
+    }
+  }
+  // var toDeleteId = toDelete.map(Node => {
+  //   return Node.id;
+  // })
 
+  // superDeletePort.postMessage(toDeleteId);
   // for(var i = 0 ; i < defaultNodes.length ; i++){
   //   diveInTree.deleteNode(defaultNodes[i]);
   // }
 }
+
+var forCheck;
+function checkChildrenStatus(node){
+  if(node.checked == false && node.pinned == false){
+    forCheck = true;
+  }else{
+    forCheck = false;
+  }
+
+  if(node.children.length !=0){
+    for(var i = 0 ; i < node.children.length ; i++){
+      checkChildrenStatus(node.children[i]);
+    }
+  }
+  return forCheck;
+}
+
 
 document.getElementById('superDeleteButton').addEventListener('click', () => {
   superDelete();
