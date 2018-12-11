@@ -223,7 +223,7 @@ function activeStatus(Node) {
   if (Node.active) {
     console.log(Node.title);
     var activeNodeHTML = document.getElementById("n" + Node.id);
-    activeNodeHTML.style.fontWeight = "700";
+    activeNodeHTML.children[1].children[0].style.fontWeight = "700";
   }
 }
 
@@ -302,11 +302,6 @@ function createTreeElement(id, title, favicon, parent, children, link, active){
   titleDiv.className = "title";
   var titleA = document.createElement("a");
   if (link == null) titleA.style.color = "A3A3A3";
-  ////////////////////*확*인*요*망*///////// Cmd + 클릭으로 새 탭 링크에서 열거나, 현재 active하던 탭을 닫으면 bold focus가 없어져요! 📌📌📌📌📌📌📌📌
-  if (active == true) {
-    titleA.style.fontWeight = "700";
-  }
-  /////////////////////////////////////////////////////////////
   var titleAText = document.createTextNode(formatTabTitle(title));
   titleA.appendChild(titleAText);
   titleDiv.appendChild(titleA);
@@ -385,12 +380,6 @@ whale.tabs.onActivated.addListener(function(activeInfo) {
   inactivateNode(id);
   
   drawHTML();
-  var rest = document.getElementsByTagName("a");
-  for (var i = 0; i < rest.length; i++) {
-    rest[i].style.fontWeight = "400"
-  }
-  var activeNodeHTML = document.getElementById("n" + id);
-  activeNodeHTML.children[1].children[0].style.fontWeight = "700";
 })
 
 function formatTabTitle(title) {
