@@ -98,12 +98,8 @@ class tree{
     //if parent, only delete text data(link) of the node
     if (closedNode.children.length != 0){ /*is parent*/
       closedNode.link = null;
-      // closedNode.title = "............"; // 이름은 그대로 두고 색을 죽여야 하지 않을까요?
-      closedNode.favicon = "../icons/iconGray_16.svg"; //if loaded favicon exists, load it in (should create defualts setting in css)
-
-      // // title 색 죽이기 (error : the color is reset when reloaded)
-      var closedNodeHTML = document.getElementById("n" + closedNode.id);
-      closedNodeHTML.children[2].children[0].color = "#D3D3D3";
+      // closedNode.title = "............"; 
+      // closedNode.favicon = "../icons/iconGray_16.svg";
     }
     //if leaf, delete node
     else {
@@ -193,6 +189,7 @@ updatePort.onMessage.addListener((message) => {
 removePort.onMessage.addListener((tabId) => {
   diveInTree.deleteNode(diveInTree.findNode(tabId));
   drawHTML();
+  grayColor(tabId);
 })
 
 navigationPort.onMessage.addListener((message) =>{
@@ -273,11 +270,11 @@ tabTree.innerHTML = "";
 
 
 function draw(Node){
-  createTreeElement(Node.id, Node.title, Node.favicon, Node.parent, Node.children);
+  createTreeElement(Node.id, Node.title, Node.favicon, Node.parent, Node.children, Node.link, Node.active);
 }
 
 
-function createTreeElement(id, title, favicon, parent, children){
+function createTreeElement(id, title, favicon, parent, children, link, active){
   var family = document.createElement("div");
   family.className = "family"
 
@@ -293,7 +290,8 @@ function createTreeElement(id, title, favicon, parent, children){
   favIconDiv.className = "favicon";
   var favIconImage = document.createElement("img");
   favIconImage.src = favicon;
-  if (favicon == undefined || favicon == "chrome://resources/whale/img/favicon.png") {
+  if (link == null) favIconImage.style.filter = "grayscale(100%)";
+  else if (favicon == undefined || favicon == "chrome://resources/whale/img/favicon.png") {
     favIconImage.src = "../icons/none.svg"
   }
   favIconDiv.appendChild(favIconImage);
@@ -303,6 +301,12 @@ function createTreeElement(id, title, favicon, parent, children){
   var titleDiv = document.createElement("div");
   titleDiv.className = "title";
   var titleA = document.createElement("a");
+  if (link == null) titleA.style.color = "A3A3A3";
+  ////////////////////*확*인*요*망*///////// Cmd + 클릭으로 새 탭 링크에서 열거나, 현재 active하던 탭을 닫으면 bold focus가 없어져요! 📌📌📌📌📌📌📌📌
+  if (active == true) {
+    titleA.style.fontWeight = "700";
+  }
+  /////////////////////////////////////////////////////////////
   var titleAText = document.createTextNode(formatTabTitle(title));
   titleA.appendChild(titleAText);
   titleDiv.appendChild(titleA);
@@ -379,14 +383,14 @@ whale.tabs.onActivated.addListener(function(activeInfo) {
   var activeNode = diveInTree.findNode(id);
   if (!activeNode.active) activeNode.setActive();
   inactivateNode(id);
-
+  
+  drawHTML();
   var rest = document.getElementsByTagName("a");
   for (var i = 0; i < rest.length; i++) {
     rest[i].style.fontWeight = "400"
   }
   var activeNodeHTML = document.getElementById("n" + id);
-  activeNodeHTML.children[2].children[0].style.fontWeight = "700";
-  drawHTML();
+  activeNodeHTML.children[1].children[0].style.fontWeight = "700";
 })
 
 function formatTabTitle(title) {
@@ -396,7 +400,6 @@ function formatTabTitle(title) {
   return title;
 }
 
-// 나중엔 토글(on/off)가 아니라 세 가지 staus가 되어야겠지만..!
 function changeStatus(status, id) {
   var changedNode = diveInTree.findNode(id);
   var changeNodeHTML = document.getElementById("n" + id)
@@ -419,6 +422,17 @@ function changeStatus(status, id) {
       whale.tabs.update(id, {'pinned' : false})
     })
   }
+}
+
+function grayColor(id) {
+      // // title 색 죽이기 (error : the color is reset when reloaded)
+      var closedNodeHTML = document.getElementById("n" + id);
+      if (closedNodeHTML.children.length > 0) {
+      closedNodeHTML.children[0].children[0].style.filter = "grayscale(100%)";
+      closedNodeHTML.children[1].children[0].style.color = "A3A3A3";
+
+      console.log(closedNodeHTML.children[1].children[0]);
+      }
 }
 
 // for super Delete
