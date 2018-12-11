@@ -98,12 +98,12 @@ class tree{
     //if parent, only delete text data(link) of the node
     if (closedNode.children.length != 0){ /*is parent*/
       closedNode.link = null;
-      closedNode.title = "............"; // 이름은 그대로 두고 색을 죽여야 하지 않을까요?
+      // closedNode.title = "............"; // 이름은 그대로 두고 색을 죽여야 하지 않을까요?
       closedNode.favicon = "../icons/iconGray_16.svg"; //if loaded favicon exists, load it in (should create defualts setting in css)
 
       // // title 색 죽이기 (error : the color is reset when reloaded)
-      // var closedNodeHTML = document.getElementById("n" + closedNode.id);
-      // closedNodeHTML.children[2].children[0].color = "#D3D3D3";
+      var closedNodeHTML = document.getElementById("n" + closedNode.id);
+      closedNodeHTML.children[2].children[0].color = "#D3D3D3";
     }
     //if leaf, delete node
     else {
@@ -221,7 +221,7 @@ function drawHTML(){
 function activeStatus(Node) {
   var rest = document.getElementsByTagName("a");
   for (var i = 0; i < rest.length; i++) {
-    rest[i].style.fontWeight = "300"
+    rest[i].style.fontWeight = "400"
   }
   if (Node.active) {
     console.log(Node.title);
@@ -314,7 +314,8 @@ function createTreeElement(id, title, favicon, parent, children){
 
   // set delete button
   var deleteButtonDiv = document.createElement("div");
-  deleteButtonDiv.innerHTML = "delete";
+  deleteButtonDiv.className = "deleteBtn"
+  deleteButtonDiv.innerHTML = "✕";
   component.appendChild(deleteButtonDiv);
 
   deleteButtonDiv.addEventListener('click', () => {
@@ -353,11 +354,11 @@ function drawStatus(status, id){
 function statusBackground(Node) {
   var nodeHTML = document.getElementById("n" + Node.id)
   if (!Node.checked && !Node.pinned) {
-    nodeHTML.children[2].style.background = ""
+    nodeHTML.children[1].style.background = ""
   } else if (Node.checked) {
-    nodeHTML.children[2].style.background = "#60B6FF28"
+    nodeHTML.children[1].style.background = "#60B6FF28"
   } else if (Node.pinned) {
-    nodeHTML.children[2].style.background = "#68E2BB46"
+    nodeHTML.children[1].style.background = "#68E2BB46"
   }
 }
 
@@ -401,18 +402,18 @@ function changeStatus(status, id) {
   var changeNodeHTML = document.getElementById("n" + id)
   if (!changedNode.checked && !changedNode.pinned) {
     changedNode.setChecked()
-    changeNodeHTML.children[2].style.background = "#60B6FF28"
+    changeNodeHTML.children[1].style.background = "#60B6FF28"
     status.src = "../icons/checked.svg"
   } else if (changedNode.checked) {
     changedNode.setPinned()
-    changeNodeHTML.children[2].style.background = "#68E2BB46"
+    changeNodeHTML.children[1].style.background = "#68E2BB46"
     status.src = "../icons/pin.svg"
     whale.tabs.get(id, function(tab){              /* If you want to synchronize pinned nodes with pinned Tabs, activate the codes */
       whale.tabs.update(id, {'pinned' : true})
     })
   } else if (changedNode.pinned) {
     changedNode.setDefault();
-    changeNodeHTML.children[2].style.background = ""
+    changeNodeHTML.children[1].style.background = ""
     status.src = "../icons/default.svg"
     whale.tabs.get(id, function(tab){             /* If you want to synchronize pinned nodes with pinned Tabs, activate the codes */
       whale.tabs.update(id, {'pinned' : false})

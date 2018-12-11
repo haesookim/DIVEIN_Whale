@@ -10,7 +10,7 @@ header {
     display: block;
     width: 100%;
     height: 80px; 
-    background-image: linear-gradient(to bottom, rgba(255,255,255,1), rgba(255,255,255,0.2));
+    background-image: linear-gradient(to bottom, rgba(255,255,255,1),  rgba(255,255,255,1), rgba(255,255,255,0.2));
     padding: 5 15 5 15;
     z-index: 100;
 }
@@ -26,7 +26,7 @@ footer {
     left: 0; 
     width: 100%;
     height: 30px;
-    background: red;
+    background-image: linear-gradient(to top, rgba(255,255,255,1),  rgba(255,255,255,1), rgba(255,255,255,0.1));
 }
 header > .logoBox {
     position: relative;
@@ -98,13 +98,12 @@ header > .clearBtnBox {
     position: absolute;                     /* 📌 이거 지우면 모양 무너짐 */
     display: inline-block;                  /* 📌 이거 지우면 모양 무너짐 */
     overflow: hidden;                       /* 📌 이거 지우면 모양 무너짐 */
-    max-width: 80%;
+    max-width: 75%;                         /* 📌 보여지는 Node Titles 얼마나 길게? (지금은 딱 x 안가릴 정도) */
     height: 16px;                           /* 📌 == title.a.line-height(1) */
-    padding: 7 4 7 4;
+    padding: 5 4 5 4;
 }
 
 .title a {
-    /* overflow: visible; */
     cursor: pointer;
     overflow: hidden;
     font-size: 13px;
@@ -118,13 +117,30 @@ header > .clearBtnBox {
     color:grey;
 }
 
+
+.deleteBtn {
+    visibility: hidden;
+    position: absolute;
+    top:0; right: 45;
+    margin-top: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+}
+
+.node:hover .deleteBtn {
+    visibility: visible;
+}
+
 .status {
     position: absolute;
-    top:0; right: 5;
+    top:0; right: -79;
     float: right;
     margin-right: 10px;
-    width: 16px;
+    width: 100px;
     height: 30px;
+    background-color: white;
 }
 /* status button */
 .status img { 
@@ -134,50 +150,51 @@ header > .clearBtnBox {
     cursor: pointer;
 }
 
-
 /* Tooltip container */
 .tooltip {
-    position: relative;
+    position: absolute;
+    right: 15;
     display: inline-block;
-    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-  }
-  
-  /* Tooltip text */
-  .tooltip .tooltiptext {
+    border-bottom: 1px dotted black;
+    /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
     visibility: hidden;
-    width: 120px;
+    width: 250px;
     background-color: #555;
     color: #fff;
     text-align: center;
-    padding: 5px 0;
-    border-radius: 6px;
-  
+    padding: 10px 0;
+    border-radius: 10px;
+
     /* Position the tooltip text */
     position: absolute;
     z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    margin-left: -60px;
-  
+    bottom: 150%;
+    left: -50%;
+    margin-left: -200px;
+
     /* Fade in tooltip */
     opacity: 0;
     transition: opacity 0.3s;
-  }
-  
-  /* Tooltip arrow */
-  .tooltip .tooltiptext::after {
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
     content: "";
     position: absolute;
     top: 100%;
-    left: 50%;
+    left: 92%;
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
     border-color: #555 transparent transparent transparent;
-  }
-  
-  /* Show the tooltip text when you mouse over the tooltip container */
-  .tooltip:hover .tooltiptext {
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
-  }
+}
