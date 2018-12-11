@@ -95,7 +95,6 @@ class tree{
   // run when tab(node) is closed
   // check if this is correct!!!
   deleteNode(closedNode){
-    console.log("----deleting Node----");
     //if parent, only delete text data(link) of the node
     if (closedNode.children.length != 0){ /*is parent*/
       closedNode.link = null;
@@ -109,18 +108,17 @@ class tree{
     //if leaf, delete node
     else {
       if(closedNode.parent){
-        console.log(closedNode)
         for (var i = 0; i < closedNode.parent.children.length; i++){
           if (closedNode.parent.children[i] == closedNode){
             closedNode.parent.children.splice(i, 1);
             closedNode.parent = null;
-            const idx = this.treeArray.indexOf(closedNode);
-            if (idx > -1) this.treeArray.splice(idx, 1);
             break;
           }
         }
+        var idx = this.treeArray.indexOf(closedNode);
+        if (idx > -1) this.treeArray.splice(idx, 1);
       }else {
-        const idx = this.treeArray.indexOf(closedNode);
+        var idx = this.treeArray.indexOf(closedNode);
         if (idx > -1) this.treeArray.splice(idx, 1);
       }
     }
@@ -147,9 +145,19 @@ class tree{
   }
 
   removeNode(tabId){
-    if(this.findNode(tabId)){
+    if(this.findNode(tabId).link == null){
+      if(this.findNode(tabId).children.length == 0){
+        console.log('debuggggggggggggggggggggggggggggggging');
+        console.log(this.findNode(tabId));
+        var idxx = this.treeArray.indexOf(this.findNode(tabId));
+        if (idxx > -1) this.treeArray.splice(idxx, 1);
+        drawHTML();
+      }
+    }else{
       whale.tabs.remove(tabId);
     }
+    // console.log('this is treeArray***************************');
+    // console.log(diveInTree.treeArray);
   }
 
 }
@@ -187,7 +195,7 @@ function drawHTML(){
   var parentNodes = diveInTree.treeArray.filter((Node) => {
     return Node.parent == null;
   })
-  while(tabTree.hasChildNodes()){
+    while(tabTree.hasChildNodes()){
     tabTree.removeChild(tabTree.firstChild);
   }
   parentNodes.forEach(confirm);
@@ -275,7 +283,6 @@ function createTreeElement(id, title, favicon, parent, children){
   component.appendChild(deleteButtonDiv);
 
   deleteButtonDiv.addEventListener('click', () => {
-    console.log(id);
     diveInTree.removeNode(id);
   })
 
@@ -384,21 +391,63 @@ function superDelete(){
   var defaultNodes = diveInTree.treeArray.filter(node => {
     return (node.checked == false && node.pinned == false);
   })
-  var defaultNodesId = defaultNodes.map(Node => {
+
+  var defaultNodesId = defaultNodes.map(Node =>{
     return Node.id;
   })
-
-  defaultNodesId.sort(function(a, b){
+  var reverseDefaultNodesId = defaultNodesId.sort(function(a, b){
     return b-a;
   })
+  var reverseDefaultNodes = reverseDefaultNodesId.map(id =>{
+    return diveInTree.findNode(id);
+  })
 
+  console.log('this is reverseDefaultNodes***************************');
+  console.log(reverseDefaultNodes);
 
-  superDeletePort.postMessage(defaultNodesId);
+  for(var i =0; i<reverseDefaultNodes.length ;i++){
+    if(reverseDefaultNodes[i].link == null){
+      console.log('b');
+      console.log(reverseDefaultNodes[i].children.length);
+      if(checkChildrenStatus(reverseDefaultNodes[i])){
+        console.log('bb');
+        var idx = diveInTree.treeArray.indexOf(reverseDefaultNodes[i]);
+        console.log(idx);
+        diveInTree.treeArray.splice(idx, 1);
+        console.log(diveInTree.treeArray);
+      }
+    }else{
+      console.log('a');
+      whale.tabs.remove(reverseDefaultNodes[i].id);
+      // toDelete.push(reverseDefaultNodes[i]);
+    }
+  }
+  // var toDeleteId = toDelete.map(Node => {
+  //   return Node.id;
+  // })
 
+  // superDeletePort.postMessage(toDeleteId);
   // for(var i = 0 ; i < defaultNodes.length ; i++){
   //   diveInTree.deleteNode(defaultNodes[i]);
   // }
 }
+
+var forCheck;
+function checkChildrenStatus(node){
+  if(node.checked == false && node.pinned == false){
+    forCheck = true;
+  }else{
+    forCheck = false;
+  }
+
+  if(node.children.length !=0){
+    for(var i = 0 ; i < node.children.length ; i++){
+      checkChildrenStatus(node.children[i]);
+    }
+  }
+  return forCheck;
+}
+
 
 document.getElementById('superDeleteButton').addEventListener('click', () => {
   superDelete();
