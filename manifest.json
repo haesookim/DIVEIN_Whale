@@ -1,7 +1,7 @@
 {
   "name": "DIVE IN",
   "description": "넘치고 또 넘치는 탭들, 알아서 정리해 줄게요.",
-  "version": "1.2",
+  "version": "1.2.1",
   "icons": {
     "128": "icons/icon_128.png"},
   "manifest_version": 2,
