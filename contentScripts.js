@@ -328,15 +328,15 @@ whale.tabs.onActivated.addListener(function(activeInfo) {
 
   var rest = document.getElementsByTagName("a");
   for (var i = 0; i < rest.length; i++) {
-    rest[i].style.fontWeight = "300"
+    rest[i].style.fontWeight = "400"
   }
   var activeNodeHTML = document.getElementById("n" + id);
   activeNodeHTML.children[2].children[0].style.fontWeight = "700";
 })
 
 function formatTabTitle(title) {
-  if(title.length > 35) {
-    title = title.substring(0, 32) + "...";
+  if(title.length > 47) {
+    title = title.substring(0, 44) + "...";
   }
   return title;
 }

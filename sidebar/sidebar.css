@@ -1,78 +1,139 @@
-.gnb {
-    padding: 0 5 0 5;
+* {
+    margin: 0;
 }
-#logoIcon {
-    width: 20px;
-    height: 20px;
-    margin: 0 5 0 5;
+html, body {
+    margin: 0;
+    height: 100%;
+}
+header {
+    position: fixed;
+    display: block;
+    width: 100%;
+    height: 80px; 
+    background-image: linear-gradient(to bottom, rgba(255,255,255,1), rgba(255,255,255,0.2));
+    padding: 5 15 5 15;
+    z-index: 100;
+}
+header, ._header {
+    height: 80px;
+}
+footer, ._footer {
+    height: 30px;
+}
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0; 
+    width: 100%;
+    height: 30px;
+    background: red;
+}
+header > .logoBox {
+    position: relative;
+    width: 30px;
+    height: 100%;
+    padding-left: 5px;
+}
+header > .logoBox > img {
+    position: relative;
+    top: 50%;
+    transform: translate(0, -50%);
+    width:100%;                               /* 30px */
+    height:50%;                               /* 30px */
 }
 
-.logo {
-    display: inline-block;
+header > .logoTitle {
+    position: absolute;
+    top:50%; left: 60px;                         
+    transform: translate(0, -50%);
+    width:auto; height:30px;
+    font-size: 2em;
+    font-weight: bold;
 }
-
-.gnb button {
-    display: inline-block;
-    float: right;
-    margin-top: 15px;
-    padding: 5px 5px;
-    background-color: white;
+header > .clearBtnBox {
+    position: absolute;
+    top: 0; right: 50;                      /* 15(padding) + 35(width/2) */
+    width: 70px;
+    height: 100%;
+}
+.clearBtnBox button {
+    width: 70px;
+    height: 30px;
+    margin: 30 0 30 0;
+    background-color: #e7e7e7;
     color: black;
     border: 2px solid #e7e7e7;
     border-radius: 15px;
-
+    cursor: pointer;
 }
 
-
-.gnb button:hover {
-    background-color: #e7e7e7;
+.clearBtn:hover {
+    background-color: white;
 }
 
+#tree {
+    margin: 0 auto;
+    padding: 5 15 5 15;
+}
 .node {
-    padding: 5 0 5 0;
-    margin-left: 16px;
+    position: relative;
+    margin: 0 0 10 15;
+    height: 30px;
 }
-/* 
-.child {
-    margin-left: 25px; 
-}
-.child.parent + .child {
-    margin-left: 50px;
-} 
-*/
-
 .favicon {
-    display: inline-block;
+    display: inline-block;                  /* 📌 이거 지우면 모양 무너짐 */
+    width: 16px;
+    height: 30px;
+    margin-right: 5px;
 }
 
 /* favicon */
 .favicon img {
     width: 16px;
     height: 16px;
-    margin-right: 10px;
+    margin: 7 0 7 0;
 }
 
 .title {
-    display: inline-block;
-    padding: 4 4 4 4;
+    position: absolute;                     /* 📌 이거 지우면 모양 무너짐 */
+    display: inline-block;                  /* 📌 이거 지우면 모양 무너짐 */
+    overflow: hidden;                       /* 📌 이거 지우면 모양 무너짐 */
+    max-width: 80%;
+    height: 16px;                           /* 📌 == title.a.line-height(1) */
+    padding: 7 4 7 4;
 }
 
 .title a {
+    /* overflow: visible; */
     cursor: pointer;
-    font-weight: 300;
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 2;
+    position: relative;
+    top: -4px;
+
+}
+
+.title a:hover {
+    color:grey;
 }
 
 .status {
-    display: inline-block;
+    position: absolute;
+    top:0; right: 5;
     float: right;
     margin-right: 10px;
+    width: 16px;
+    height: 30px;
 }
 /* status button */
 .status img { 
     width: 16px;
     height: 16px;
+    margin: 7 0 7 0;
     cursor: pointer;
 }
+
 
 /* Tooltip container */
 .tooltip {

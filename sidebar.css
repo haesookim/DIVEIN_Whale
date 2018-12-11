@@ -1,0 +1,66 @@
+* {
+    margin: 0;
+}
+html, body {
+    height: 100%;
+}
+header {
+    position: fixed;
+    width: 100%;
+    height: 60px; 
+    background: white;
+    padding: 5 15 5 15;
+}
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0; 
+    width: 100%;
+    height: 28px;
+    background: red;
+}
+
+header > .logoBox {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 100%;
+}
+header > .logoBox > img {
+    position: relative;
+    top: 50%;
+    transform: translate(0, -50%);
+    width:100%;                               /* 30px */
+    height:50%;                               /* 30px */
+}
+header > .logoTitle {
+    position: absolute;
+    top:50%; left: 60px;                         
+    transform: translate(0, -50%);
+    width:auto; height:30px;
+    font-size: 2em;
+    font-weight: bold;
+}
+header > .clearBtnBox {
+    position: absolute;
+    top: 0; right: 50;                      /* 15(padding) + 35(width/2) */
+    width: 70px;
+    height: 100%;
+}
+.clearBtnBox button {
+    width: 70px;
+    height: 30px;
+    margin: 15 0 15 0;
+    background-color: #e7e7e7;
+    color: black;
+    border: 2px solid #e7e7e7;
+    border-radius: 15px;
+}
+.clearBtn:hover {
+    background-color: white;
+}
+#tree {
+    min-height: 100%;                       /* body height */
+    margin: 0 auto;
+    padding: 75 15 35 15;                   /* header+5, padding, footer+5, padding */
+}
