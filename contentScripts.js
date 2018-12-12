@@ -170,6 +170,19 @@ class tree{
         if (idxx > -1) this.treeArray.splice(idxx, 1);
         drawHTML();
       }
+      else{
+        for (var i = 0; i <this.findNode(tabId).children.length ; i++){
+          this.findNode(tabId).children[i].parent = this.findNode(tabId).parent;
+          this.findNode(tabId).parent.children.push(this.findNode(tabId).children[i]);
+        }
+        var idxx = this.treeArray.indexOf(this.findNode(tabId));
+        if (this.findNode(tabId).parent != null){
+          var idxxx = this.findNode(tabId).parent.children.indexOf(this.findNode(tabId));
+          this.findNode(tabId).parent.children.splice(idxxx,1);
+        }
+        this.treeArray.splice(idxx, 1);
+        drawHTML();
+      }
     }else{
       whale.tabs.remove(tabId);
     }
