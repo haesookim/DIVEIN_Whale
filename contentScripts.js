@@ -49,10 +49,8 @@ class tree{
   createNode(tab){
     var newNode = new Node(tab.id, tab.url, tab.title, tab.favIconUrl);
     this.treeArray.push(newNode);
-    // console.log(tab.openerTabId);
     if(tab.url != 'chrome://newtab/'){
       if(tab.openerTabId != null){
-        // console.log(this.findNode(tab.openerTabId));
         this.setParent(this.findNode(tab.openerTabId), newNode);
       }
     }
@@ -86,11 +84,6 @@ class tree{
       updatedNode.favicon = changeInfo.favIconUrl
     }
   }
-  //insert node to the tree accordingly
-  // insertNode(newNode){
-
-  //   //setparent, setchild
-  // }
 
   // run when tab(node) is closed
   // check if this is correct!!!
@@ -98,8 +91,6 @@ class tree{
     //if parent, only delete text data(link) of the node
     if (closedNode.children.length != 0){ /*is parent*/
       closedNode.link = null;
-      // closedNode.title = "............";
-      // closedNode.favicon = "../icons/iconGray_16.svg";
     }
     //if leaf, delete node
     else {
@@ -138,7 +129,6 @@ class tree{
         whale.tabs.query({url: updatedNode.link}, function(tabs){
           for (var i = 0; i < tabs.length; i++) {
             if (tabs[i].id == tabId){
-              console.log(tabId);
               updatedNode.title = tabs[i].title;
               break;
             }
@@ -164,8 +154,6 @@ class tree{
   removeNode(tabId){
     if(this.findNode(tabId).link == null){
       if(this.findNode(tabId).children.length == 0){
-        console.log('debuggggggggggggggggggggggggggggggging');
-        console.log(this.findNode(tabId));
         var idxx = this.treeArray.indexOf(this.findNode(tabId));
         if (idxx > -1) this.treeArray.splice(idxx, 1);
         drawHTML();
@@ -186,8 +174,6 @@ class tree{
     }else{
       whale.tabs.remove(tabId);
     }
-    // console.log('this is treeArray***************************');
-    // console.log(diveInTree.treeArray);
   }
 
 }
@@ -201,7 +187,6 @@ const navigationPort = whale.runtime.connect({name: 'navigate'});
 createPort.onMessage.addListener((tab) => {
   diveInTree.createNode(tab);
   if (tab.active){
-    console.log("hmm");
     var toDeactivate = diveInTree.treeArray.filter((Node) => {
       return Node.active == true;
     })
@@ -217,7 +202,6 @@ createPort.onMessage.addListener((tab) => {
 
 updatePort.onMessage.addListener((message) => {
   diveInTree.updateNode(message.tabId, message.changeInfo);
-  console.log("updates");
   drawHTML();
 })
 
@@ -251,16 +235,9 @@ function drawHTML(){
 }
 
 function activeStatus(Node) {
-  // var rest = document.getElementsByTagName("a");
-  // for (var i = 0; i < rest.length; i++) {
-  //   rest[i].style.fontWeight = "400";
-  // }
   if (Node.active) {
-    console.log(Node.title);
     var activeNodeHTML = document.getElementById("n" + Node.id);
-    console.log(activeNodeHTML);
     activeNodeHTML.children[1].children[0].style.fontWeight = "700";
-    console.log(activeNodeHTML.children[1].children[0]);
   }
 }
 
@@ -285,13 +262,6 @@ document.addEventListener('DOMContentLoaded', function() {
   })
 })
 
-
-// port.onMessage.addListener(message => {
-//   console.log(message);
-// })
-
-//재귀
-
 function confirm(Node) {
   if(Node.children.length){
     draw(Node);
@@ -299,7 +269,6 @@ function confirm(Node) {
   } else{
     draw(Node);
   }
-  // draw(Node);
 }
 
 var tabTree = document.getElementById('tree');
@@ -377,13 +346,10 @@ function drawStatus(status, id){
   var Node = diveInTree.findNode(id);
   if (!Node.checked && !Node.pinned) {
     status.src = "../icons/default.svg"
-    // nodeHTML.children[2].style.background = ""
   } else if (Node.checked) {
     status.src = "../icons/checked.svg"
-    // nodeHTML.children[2].style.background = "#60B6FF28"
   } else if (Node.pinned) {
     status.src = "../icons/pin.svg"
-    // nodeHTML.children[2].style.background = "#68E2BB46"
   }
 }
 
@@ -400,7 +366,6 @@ function statusBackground(Node) {
 
 function activateTab(id) {
   whale.tabs.update(id, {"active": true});
-  console.log('activated this tab');
 }
 
 function inactivateNode(activeTabId) {
@@ -416,8 +381,6 @@ whale.tabs.onActivated.addListener(function(activeInfo) {
   var activeNode = diveInTree.findNode(id);
   if (!activeNode.active) activeNode.setActive();
   inactivateNode(id);
-  console.log(diveInTree.findNode(id));
-
   drawHTML();
 })
 
@@ -458,8 +421,6 @@ function grayColor(id) {
       if (closedNodeHTML.children.length > 0) {
       closedNodeHTML.children[0].children[0].style.filter = "grayscale(100%)";
       closedNodeHTML.children[1].children[0].style.color = "A3A3A3";
-
-      console.log(closedNodeHTML.children[1].children[0]);
       }
 }
 
@@ -481,34 +442,17 @@ function superDelete(){
     return diveInTree.findNode(id);
   })
 
-  console.log('this is reverseDefaultNodes***************************');
-  console.log(reverseDefaultNodes);
-
   for(var i =0; i<reverseDefaultNodes.length ;i++){
     if(reverseDefaultNodes[i].link == null){
-      console.log('b');
-      console.log(reverseDefaultNodes[i].children.length);
       if(checkChildrenStatus(reverseDefaultNodes[i])){
-        console.log('bb');
         var idx = diveInTree.treeArray.indexOf(reverseDefaultNodes[i]);
-        console.log(idx);
         diveInTree.treeArray.splice(idx, 1);
-        console.log(diveInTree.treeArray);
       }
     }else{
-      console.log('a');
       whale.tabs.remove(reverseDefaultNodes[i].id);
       // toDelete.push(reverseDefaultNodes[i]);
     }
   }
-  // var toDeleteId = toDelete.map(Node => {
-  //   return Node.id;
-  // })
-
-  // superDeletePort.postMessage(toDeleteId);
-  // for(var i = 0 ; i < defaultNodes.length ; i++){
-  //   diveInTree.deleteNode(defaultNodes[i]);
-  // }
 }
 
 var forCheck;
@@ -531,27 +475,6 @@ function checkChildrenStatus(node){
 document.getElementById('superDeleteButton').addEventListener('click', () => {
   superDelete();
 });
-
-//   // 클릭했을 때 그 탭으로 focus 옮겨지도록 ✓
-//   // 탭마다 status(default, checked, pinned 부여)
-//   // 파비콘 삽입 ✓
-//   // sidebar 오른쪽에다 status 표시하는 아이콘 넣고
-//   // 이 아이콘 클릭했을 때 status 변하도록
-//   // status 별로 배경색깔 다르게
-
-
-//   //싱크
-// document.addEventListener('DOMContentLoaded', function() {
-//   updateTabList();
-// });
-// whale.tabs.onCreated.addListener(updateTabList);
-// whale.tabs.onUpdated.addListener(updateTabList);
-// whale.tabs.onAttached.addListener(updateTabList);
-// whale.tabs.onDetached.addListener(updateTabList);
-// whale.tabs.onRemoved.addListener(updateTabList);
-// whale.tabs.onActivated.addListener(updateTabList); // to make the title bold
-//   // attached, detached 되었을 때 비활된 창의 sidebar에도 활성화된 창의 탭 트리가 떠버림
-//   // tab query currentWindow 손대야 할 듯
 
 function indent(Node) {
   if (Node.parent != null) {
