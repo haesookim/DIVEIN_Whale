@@ -27,7 +27,7 @@ whale.runtime.onConnect.addListener(removePort => {
 whale.runtime.onConnect.addListener(navigationPort => {
   if (navigationPort.name === 'navigate'){
     whale.webNavigation.onCommitted.addListener((details) =>{
-      navigationPort.postMessage({tabId : details.tabId, transitionQualifiers: details.transitionQualifiers});
+      navigationPort.postMessage({tabId : details.tabId, transitionQualifiers: details.transitionQualifiers, transitionType: details.transitionType});
     })
   }
 })
@@ -35,7 +35,7 @@ whale.runtime.onConnect.addListener(navigationPort => {
 whale.runtime.onConnect.addListener(superDeletePort => {
   if (superDeletePort.name === 'superDelete'){
     superDeletePort.onMessage.addListener(message => {
- 
+
       for(var i = 0; i<message.length; i++){
         whale.tabs.remove(message[i]);
       }

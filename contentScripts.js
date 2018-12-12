@@ -98,7 +98,7 @@ class tree{
     //if parent, only delete text data(link) of the node
     if (closedNode.children.length != 0){ /*is parent*/
       closedNode.link = null;
-      // closedNode.title = "............"; 
+      // closedNode.title = "............";
       // closedNode.favicon = "../icons/iconGray_16.svg";
     }
     //if leaf, delete node
@@ -120,8 +120,20 @@ class tree{
     }
   }
 
-  navUpdateNode(tabId, transitionQualifiers){
+  navUpdateNode(tabId, transitionQualifiers, transitionType){
     var updatedNode = this.findNode(tabId);
+    console.log(transitionType);
+    if (transitionType == "auto_bookmark"){
+      console.log("whyyyy");
+      if (updatedNode.parent != null){
+        for (var i = 0; i < updatedNode.parent.children.length; i++){
+          if (updatedNode.parent.children[i] == updatedNode){
+            updatedNode.parent.children.splice(i, 1);
+            updatedNode.parent = null;
+          }
+        }
+      }
+    }
     for (var i = 0; i < transitionQualifiers.length; i++){
       if (transitionQualifiers[i] == "from_address_bar"){
         if (updatedNode.parent != null){
@@ -193,7 +205,7 @@ removePort.onMessage.addListener((tabId) => {
 })
 
 navigationPort.onMessage.addListener((message) =>{
-  diveInTree.navUpdateNode(message.tabId, message.transitionQualifiers);
+  diveInTree.navUpdateNode(message.tabId, message.transitionQualifiers, message.transitionType);
   drawHTML();
 })
 
@@ -382,7 +394,7 @@ whale.tabs.onActivated.addListener(function(activeInfo) {
   if (!activeNode.active) activeNode.setActive();
   inactivateNode(id);
   console.log(diveInTree.findNode(id));
-  
+
   drawHTML();
 })
 
