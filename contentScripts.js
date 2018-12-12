@@ -216,14 +216,16 @@ function drawHTML(){
 }
 
 function activeStatus(Node) {
-  var rest = document.getElementsByTagName("a");
-  for (var i = 0; i < rest.length; i++) {
-    rest[i].style.fontWeight = "400"
-  }
+  // var rest = document.getElementsByTagName("a");
+  // for (var i = 0; i < rest.length; i++) {
+  //   rest[i].style.fontWeight = "400";
+  // }
   if (Node.active) {
     console.log(Node.title);
     var activeNodeHTML = document.getElementById("n" + Node.id);
+    console.log(activeNodeHTML);
     activeNodeHTML.children[1].children[0].style.fontWeight = "700";
+    console.log(activeNodeHTML.children[1].children[0]);
   }
 }
 
@@ -363,6 +365,7 @@ function statusBackground(Node) {
 
 function activateTab(id) {
   whale.tabs.update(id, {"active": true});
+  console.log('activated this tab');
 }
 
 function inactivateNode(activeTabId) {
@@ -378,6 +381,7 @@ whale.tabs.onActivated.addListener(function(activeInfo) {
   var activeNode = diveInTree.findNode(id);
   if (!activeNode.active) activeNode.setActive();
   inactivateNode(id);
+  console.log(diveInTree.findNode(id));
   
   drawHTML();
 })
