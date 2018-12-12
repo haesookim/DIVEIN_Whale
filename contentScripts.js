@@ -122,9 +122,7 @@ class tree{
 
   navUpdateNode(tabId, transitionQualifiers, transitionType){
     var updatedNode = this.findNode(tabId);
-    console.log(transitionType);
     if (transitionType == "auto_bookmark"){
-      console.log("whyyyy");
       if (updatedNode.parent != null){
         for (var i = 0; i < updatedNode.parent.children.length; i++){
           if (updatedNode.parent.children[i] == updatedNode){
@@ -132,10 +130,24 @@ class tree{
             updatedNode.parent = null;
           }
         }
+        whale.tabs.update(tabId, {openerTabId : null})
       }
     }
     for (var i = 0; i < transitionQualifiers.length; i++){
-      if (transitionQualifiers[i] == "from_address_bar"){
+      if (transitionQualifiers[i] == "forward_back"){
+        whale.tabs.query({url: updatedNode.link}, function(tabs){
+          for (var i = 0; i < tabs.length; i++) {
+            if (tabs[i].id == tabId){
+              console.log(tabId);
+              updatedNode.title = tabs[i].title;
+              break;
+            }
+          }
+        })
+        break;
+      }
+
+      else if (transitionQualifiers[i] == "from_address_bar"){
         if (updatedNode.parent != null){
           for (var i = 0; i < updatedNode.parent.children.length; i++){
             if (updatedNode.parent.children[i] == updatedNode){
@@ -144,9 +156,6 @@ class tree{
             }
           }
         }
-        break;
-      }
-      else if (transitionQualifiers[i] == "forward_back"){
         break;
       }
     }
@@ -195,6 +204,7 @@ createPort.onMessage.addListener((tab) => {
 
 updatePort.onMessage.addListener((message) => {
   diveInTree.updateNode(message.tabId, message.changeInfo);
+  console.log("updates");
   drawHTML();
 })
 
