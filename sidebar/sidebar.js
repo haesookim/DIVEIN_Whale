@@ -208,7 +208,7 @@ updatePort.onMessage.addListener((message) => {
 removePort.onMessage.addListener((tabId) => {
   diveInTree.deleteNode(diveInTree.findNode(tabId));
   drawHTML();
-  grayColor(tabId);
+  // grayColor(tabId);
 })
 
 navigationPort.onMessage.addListener((message) =>{
@@ -338,6 +338,8 @@ function createTreeElement(id, title, favicon, parent, children, link, active){
   status.addEventListener('click', () => {
     changeStatus(status, id);
   });
+
+  component.active = false;
 
   tabTree.appendChild(component);
 }

@@ -11,11 +11,6 @@
     "webNavigation"
   ],
 
-  "content_scripts": [{
-    "matches": ["http://*/*"],
-    "js": ["contentScripts.js"]
-}],
-
   "background": {
     "scripts" : [
       "background.js"
